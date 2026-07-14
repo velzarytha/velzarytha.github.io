@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/tools/depreciation-calculator.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/tools/sales-tax-calculator.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/tools/capital-gains-calculator.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/tools/estimated-tax-calculator.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/pages/about.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/pages/privacy.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/pages/terms.html</loc></url>
-  <url><loc>https://YOUR_GITHUB_USERNAME.github.io/velzarytha/pages/disclaimer.html</loc></url>
+
+  <url><loc>https://velzarytha.github.io/</loc></url>
+  <url><loc>https://velzarytha.github.io/tools/depreciation-calculator.html</loc></url>
+  <url><loc>https://velzarytha.github.io/tools/sales-tax-calculator.html</loc></url>
+  <url><loc>https://velzarytha.github.io/tools/capital-gains-calculator.html</loc></url>
+  <url><loc>https://velzarytha.github.io/tools/estimated-tax-calculator.html</loc></url>
+  <url><loc>https://velzarytha.github.io/pages/about.html</loc></url>
+  <url><loc>https://velzarytha.github.io/pages/privacy.html</loc></url>
+  <url><loc>https://velzarytha.github.io/pages/terms.html</loc></url>
+  <url><loc>https://velzarytha.github.io/pages/disclaimer.html</loc></url>
 </urlset>
