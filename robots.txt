@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://YOUR_GITHUB_USERNAME.github.io/velzarytha/sitemap.xml
+Sitemap: https://velzarytha.github.io/sitemap.xml
