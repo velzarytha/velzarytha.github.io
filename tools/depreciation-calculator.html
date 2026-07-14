@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depreciation Calculator — Straight-Line Schedule | Velzarytha</title>
+  <meta name="description" content="Estimate depreciable basis and generate a printable straight-line depreciation schedule with business-use and land adjustments.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#070816">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/tool.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <button class="menu-button" id="menuButton" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="../index.html#tools">Tools</a>
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </nav>
+  </header>
+
+  <main class="tool-main">
+    <div class="breadcrumbs"><a href="../index.html">Home</a> / Depreciation Calculator</div>
+    <section class="tool-heading">
+      <div>
+        <p class="eyebrow">Free browser-based calculator</p>
+        <h1>Depreciation Calculator</h1>
+      </div>
+      <p>Estimate depreciable basis and create a clean year-by-year straight-line schedule. This planning tool uses the assumptions you enter.</p>
+    </section>
+
+
+<section class="calculator-layout">
+  <form class="panel input-panel" id="depreciationForm">
+    <div class="panel-header"><h2>Asset information</h2><p>Enter the asset values and schedule assumptions.</p></div>
+    <div class="form-grid">
+      <div class="field full"><label for="assetName">Asset description</label><input id="assetName" type="text" placeholder="Example: Office computer"></div>
+      <div class="field"><label for="assetCost">Purchase price ($)</label><input id="assetCost" type="number" min="0" step="0.01" value="10000" required></div>
+      <div class="field"><label for="additionalCosts">Capitalized costs ($)</label><input id="additionalCosts" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="landValue">Land / non-depreciable amount ($)</label><input id="landValue" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="salvageValue">Salvage value ($)</label><input id="salvageValue" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="businessUse">Business use (%)</label><input id="businessUse" type="number" min="0" max="100" step="0.01" value="100" required></div>
+      <div class="field"><label for="recoveryYears">Recovery period (years)</label><input id="recoveryYears" type="number" min="1" max="50" step="1" value="5" required></div>
+      <div class="field"><label for="serviceDate">Placed-in-service date</label><input id="serviceDate" type="date" required></div>
+      <div class="field"><label for="proration">First-year treatment</label><select id="proration"><option value="full">Full-year estimate</option><option value="monthly">Monthly proration</option></select></div>
+    </div>
+    <div class="form-actions">
+      <button class="button button-primary" type="submit">Create schedule</button>
+      <button class="button button-secondary" type="reset">Reset</button>
+    </div>
+    <p class="form-message" id="depreciationMessage" aria-live="polite"></p>
+  </form>
+
+  <section class="panel results-panel">
+    <div class="result-empty" id="depreciationEmpty"><div><span>↘</span><p>Your depreciation summary and schedule will appear here.</p></div></div>
+    <div class="result-content" id="depreciationContent" hidden>
+      <div class="panel-header"><h2 id="depreciationTitle">Depreciation results</h2><p>Straight-line planning estimate</p></div>
+      <div class="result-grid">
+        <article class="metric highlight"><p>Depreciable basis</p><strong id="depreciableBasis">$0.00</strong></article>
+        <article class="metric"><p>Full-year depreciation</p><strong id="annualDepreciation">$0.00</strong></article>
+        <article class="metric"><p>Non-depreciable amount</p><strong id="nonDepreciable">$0.00</strong></article>
+        <article class="metric"><p>Business-use percentage</p><strong id="businessUseResult">0%</strong></article>
+      </div>
+      <div class="schedule-wrap">
+        <h3>Estimated schedule</h3>
+        <table>
+          <thead><tr><th>Year</th><th>Depreciation</th><th>Accumulated</th><th>Ending book value</th></tr></thead>
+          <tbody id="depreciationSchedule"></tbody>
+        </table>
+      </div>
+      <p class="result-note">This is a straight-line planning estimate. It does not apply MACRS tables, bonus depreciation, Section 179, listed-property rules, or tax-law conventions.</p>
+      <div class="form-actions"><button class="button button-secondary" type="button" onclick="window.print()">Print results</button></div>
+    </div>
+  </section>
+</section>
+
+  </main>
+
+
+<section class="content-section">
+  <div><p class="eyebrow">How it works</p><h2>Understand the basis before the schedule.</h2></div>
+  <div class="content-body">
+    <p>The calculator starts with purchase price and capitalized costs, removes land and salvage value, then applies the business-use percentage. The remaining amount is divided over the recovery period.</p>
+    <h3>What this version includes</h3>
+    <ul><li>Land and other non-depreciable amounts</li><li>Business-use adjustment</li><li>Full-year or simple monthly proration</li><li>Year-by-year printable schedule</li></ul>
+    <h3>What it does not determine</h3>
+    <p>It does not decide whether an asset qualifies for a particular tax treatment. Confirm current federal and state rules before using the result on a tax return.</p>
+  </div>
+</section>
+
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <div class="footer-links">
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/privacy.html">Privacy</a>
+      <a href="../pages/terms.html">Terms</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </div>
+    <p>© <span data-current-year></span> Velzarytha.</p>
+  </footer>
+
+  <script src="../js/site.js"></script>
+  <script src="../js/depreciation.js"></script>
+</body>
+</html>

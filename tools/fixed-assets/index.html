@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velzarytha Fixed Assets — Depreciation Management Beta</title>
+  <meta name="description" content="Organize fixed assets, estimate federal depreciation, review Section 179 and bonus elections, and export supporting schedules.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#080914">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="disclaimerBanner" class="disclaimer-banner">
+    <p><strong>Planning software:</strong> This software assists with depreciation calculations but does not constitute tax advice. Verify figures against current IRS guidance and consult a qualified tax professional before filing.</p>
+    <button id="dismissDisclaimer" type="button" aria-label="Dismiss disclaimer">×</button>
+  </div>
+
+  <header class="app-header">
+    <a class="brand" href="#dashboard"><span>V</span>Velzarytha</a>
+    <div class="tax-year-status">
+      <label for="activeTaxYear">Tax year</label>
+      <select id="activeTaxYear"></select>
+      <small id="verifiedStatus">Rates last verified: —</small>
+    </div>
+   <div class="header-actions">
+      <a class="button secondary" href="../../index.html">Main website</a>
+
+      <button
+        id="quickReview"
+        class="icon-button"
+        type="button"
+        title="Open data review"
+      >
+        ✓
+      </button>
+
+      <button
+        id="themeToggle"
+        class="icon-button"
+        type="button"
+        title="Switch light or dark mode"
+      >
+        ◐
+      </button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <nav>
+        <button class="nav-item active" data-view="dashboard"><span>⌂</span>Dashboard</button>
+        <button class="nav-item" data-view="assets"><span>▦</span>Assets</button>
+        <button class="nav-item" data-view="entities"><span>◆</span>Companies</button>
+        <button class="nav-item" data-view="elections"><span>§</span>Elections</button>
+        <button class="nav-item" data-view="reports"><span>▤</span>Reports</button>
+        <button class="nav-item" data-view="form4562"><span>F</span>Form 4562</button>
+        <button class="nav-item" data-view="review"><span>✓</span>Data review</button>
+        <button class="nav-item" data-view="audit"><span>↺</span>Audit log</button>
+        <button class="nav-item" data-view="settings"><span>⚙</span>Settings</button>
+      </nav>
+      <div class="sidebar-note">Stored in this browser. Export backups regularly.</div>
+    </aside>
+
+    <main class="main-content">
+      <section class="view active" id="view-dashboard">
+        <div class="page-heading">
+          <div><p class="eyebrow">Fixed asset workspace</p><h1>Dashboard</h1><p>Review depreciation, unresolved issues, and recent activity.</p></div>
+          <div class="heading-actions"><button class="button secondary" data-action="import-csv">Import CSV</button><button class="button primary" data-action="add-asset">+ Add asset</button></div>
+        </div>
+        <div id="systemAlerts"></div>
+        <div class="metric-grid">
+          <article class="metric"><span>Total assets</span><strong id="metricAssets">0</strong><small>Active and disposed</small></article>
+          <article class="metric"><span>Current federal depreciation</span><strong id="metricDepreciation">$0</strong><small>Selected tax year</small></article>
+          <article class="metric"><span>Remaining federal basis</span><strong id="metricBasis">$0</strong><small>Estimated ending basis</small></article>
+          <article class="metric"><span>Review issues</span><strong id="metricIssues">0</strong><small>Errors and warnings</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-heading"><div><h2>Recently updated assets</h2><p>Select an asset to open its schedules.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Asset</th><th>Company</th><th>Placed in service</th><th>Current depreciation</th><th>Status</th></tr></thead><tbody id="recentAssetsBody"></tbody></table></div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading"><div><h2>Automation status</h2><p>Checks that apply across the selected year.</p></div></div>
+            <div id="automationStatus" class="status-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-assets">
+        <div class="page-heading">
+          <div><p class="eyebrow">Asset register</p><h1>Assets</h1><p>Search, import, edit, duplicate, dispose, or review schedules.</p></div>
+          <div class="heading-actions"><button class="button secondary" data-action="import-csv">Import CSV</button><button class="button primary" data-action="add-asset">+ Add asset</button></div>
+        </div>
+        <div class="toolbar panel">
+          <input id="assetSearch" type="search" placeholder="Search asset, tag, category, or company">
+          <select id="entityFilter"><option value="">All companies</option></select>
+          <select id="assetStatusFilter"><option value="">All statuses</option><option value="active">Active</option><option value="disposed">Disposed</option></select>
+          <button class="button secondary" id="exportAssetsCsv">Export CSV</button>
+          <button class="button secondary" id="downloadTemplate">CSV template</button>
+          <button class="button secondary" id="backupData">Backup JSON</button>
+          <label class="button secondary file-button">Restore JSON<input id="restoreData" type="file" accept="application/json"></label>
+        </div>
+        <div class="panel">
+          <div class="table-wrap"><table><thead><tr><th>Asset</th><th>Tag</th><th>Company</th><th>Category</th><th>Placed</th><th>Basis</th><th>Federal method</th><th>Actions</th></tr></thead><tbody id="assetsBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-entities">
+        <div class="page-heading">
+          <div><p class="eyebrow">Multi-entity support</p><h1>Companies</h1><p>Manage clients, tax profiles, and state assumptions.</p></div>
+          <button class="button primary" id="addEntity">+ Add company</button>
+        </div>
+        <div id="entitiesGrid" class="card-grid"></div>
+      </section>
+
+      <section class="view" id="view-elections">
+        <div class="page-heading">
+          <div><p class="eyebrow">Annual elections and limitations</p><h1>Elections</h1><p>Enter business taxable income, Section 179 carryforwards, bonus class elections, and state settings.</p></div>
+        </div>
+        <div class="panel report-controls">
+          <label>Company<select id="electionEntity"><option value="">Select company</option></select></label>
+          <label>Tax year<select id="electionYear"></select></label>
+          <button class="button primary" id="loadElectionProfile">Load profile</button>
+        </div>
+        <form id="electionForm" class="panel" hidden>
+          <div class="section-title"><div><h2>Section 179 and income limitation</h2><p>These inputs control the entity-level Form 4562 calculation.</p></div></div>
+          <div class="form-grid">
+            <label>Business taxable income ($) <button class="tip" type="button" data-tip="Section 179 is limited by taxable income from active trades or businesses. Leave blank only for a provisional estimate.">ⓘ</button><input id="profileTaxableIncome" type="number" min="0" step="0.01"></label>
+            <label>Section 179 carryforward in ($)<input id="profile179CarryIn" type="number" min="0" step="0.01" value="0"></label>
+          </div>
+          <div id="section179ProfileSummary" class="summary-strip"></div>
+
+          <div class="section-title"><div><h2>Bonus election by property class</h2><p>An opt-out generally applies to all qualified property in the same class placed in service during the year.</p></div></div>
+          <div id="bonusClassGrid" class="election-grid"></div>
+
+          <div class="section-title"><div><h2>State comparison profile</h2><p>Use federal conformity, a no-bonus estimate, or manually verified state limits.</p></div></div>
+          <div class="form-grid">
+            <label>State schedule mode<select id="profileStateMode"><option value="federal">Federal-conforming estimate</option><option value="noBonus">No state bonus; federal Section 179</option><option value="custom">Custom state limits</option></select></label>
+            <label>State taxable income ($)<input id="profileStateTaxableIncome" type="number" min="0" step="0.01"></label>
+            <label class="state-custom">State Section 179 limit ($)<input id="profileState179Limit" type="number" min="0" step="1"></label>
+            <label class="state-custom">State phase-out threshold ($)<input id="profileState179Threshold" type="number" min="0" step="1"></label>
+            <label class="state-custom">State SUV cap ($)<input id="profileStateSuvCap" type="number" min="0" step="1"></label>
+            <label class="state-custom">State bonus percentage (%)<input id="profileStateBonus" type="number" min="0" max="100" step="0.01"></label>
+          </div>
+          <div class="form-actions"><button class="button primary" type="submit">Save election profile</button></div>
+        </form>
+      </section>
+
+      <section class="view" id="view-reports">
+        <div class="page-heading">
+          <div><p class="eyebrow">Supporting schedules</p><h1>Reports</h1><p>Build current-year, book-versus-tax, disposal, and rollforward reports.</p></div>
+        </div>
+        <div class="panel report-controls">
+          <label>Company<select id="reportEntity"><option value="">Select company</option></select></label>
+          <label>Tax year<select id="reportYear"></select></label>
+          <label>Report<select id="reportType"><option value="current">Current-year depreciation</option><option value="comparison">Book / federal / ADS / state</option><option value="disposals">Disposal and recapture screening</option><option value="rollforward">Fixed asset rollforward</option></select></label>
+          <button class="button primary" id="buildReport">Build report</button>
+          <button class="button secondary" id="printReport">Print</button>
+          <button class="button secondary" id="exportReportCsv">Export CSV</button>
+        </div>
+        <div id="reportOutput" class="panel report-paper"><div class="empty-state"><strong>No report generated</strong><p>Select a company, year, and report.</p></div></div>
+      </section>
+
+      <section class="view" id="view-form4562">
+        <div class="page-heading">
+          <div><p class="eyebrow">Draft form worksheet</p><h1>Form 4562 Preview</h1><p>Simplified line mapping for review only. It is not the official IRS form.</p></div>
+        </div>
+        <div class="preview-warning"><strong>PREVIEW — NOT FOR FILING</strong><span>The worksheet may omit required lines, statements, elections, and limitations.</span></div>
+        <div class="panel report-controls">
+          <label>Company<select id="form4562Entity"><option value="">Select company</option></select></label>
+          <label>Tax year<select id="form4562Year"></select></label>
+          <button class="button primary" id="buildForm4562">Generate preview</button>
+          <button class="button secondary" id="downloadForm4562Pdf">Download PDF</button>
+          <button class="button secondary" id="printForm4562">Print</button>
+        </div>
+        <div id="form4562Output" class="form-preview paper-preview"><div class="empty-state"><strong>No preview generated</strong><p>Select a company and tax year.</p></div></div>
+      </section>
+
+      <section class="view" id="view-review">
+        <div class="page-heading">
+          <div><p class="eyebrow">Pre-report validation</p><h1>Data Review</h1><p>Resolve missing fields, conflicting elections, and calculation warnings.</p></div>
+          <div class="heading-actions"><button class="button secondary" id="runSelfTests">Run calculation self-tests</button><button class="button primary" id="refreshReview">Refresh review</button></div>
+        </div>
+        <div id="reviewMetrics" class="metric-grid compact"></div>
+        <div id="selfTestOutput"></div>
+        <div class="panel review-toolbar">
+          <label>Severity<select id="reviewSeverity"><option value="">All</option><option value="error">Errors</option><option value="warning">Warnings</option><option value="info">Information</option></select></label>
+          <input id="reviewSearch" type="search" placeholder="Search review messages">
+        </div>
+        <div id="reviewList" class="issue-list"></div>
+      </section>
+
+      <section class="view" id="view-audit">
+        <div class="page-heading">
+          <div><p class="eyebrow">Change history</p><h1>Audit Log</h1><p>Review local creates, edits, deletes, imports, settings changes, and restores.</p></div>
+          <div class="heading-actions"><button class="button secondary" id="undoLastChange">Undo last asset/company change</button><button class="button secondary" id="exportAuditCsv">Export audit CSV</button></div>
+        </div>
+        <div class="panel toolbar"><input id="auditSearch" type="search" placeholder="Search audit history"><select id="auditAction"><option value="">All actions</option><option>create</option><option>update</option><option>delete</option><option>import</option><option>restore</option><option>undo</option></select></div>
+        <div id="auditList" class="audit-list"></div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <div class="page-heading">
+          <div><p class="eyebrow">Centralized constants</p><h1>Settings</h1><p>Maintain annual IRS constants and automation preferences without editing code.</p></div>
+          <button class="button secondary" id="resetSettings">Restore supplied defaults</button>
+        </div>
+        <div class="warning-box"><strong>Verify annually.</strong> Legislation and IRS guidance can change. Confirm the selected year before relying on calculations.</div>
+        <form id="settingsForm" class="panel">
+          <div class="form-grid">
+            <label>Tax year<select id="settingsYear"></select></label>
+            <label>Rates last verified<input id="verifiedDate" type="date"></label>
+            <label>Section 179 maximum ($)<input id="section179Limit" type="number" min="0" step="1"></label>
+            <label>Section 179 phase-out threshold ($)<input id="section179Threshold" type="number" min="0" step="1"></label>
+            <label>SUV Section 179 cap ($)<input id="suvCap" type="number" min="0" step="1"></label>
+            <label>Transition bonus percentage (%)<input id="transitionBonusPercent" type="number" min="0" max="100" step="0.01"></label>
+            <label>Permanent bonus percentage (%)<input id="permanentBonusPercent" type="number" min="0" max="100" step="0.01"></label>
+            <label>Permanent bonus acquisition cutoff<input id="permanentBonusAcquiredAfter" type="date"></label>
+            <label>Business mileage rate ($/mile)<input id="mileageRate" type="number" min="0" step="0.001"></label>
+            <label>Mid-quarter threshold (%)<input id="midQuarterThreshold" type="number" min="0" max="100" step="0.01"></label>
+            <label class="wide">Source / verification note<textarea id="settingsSourceNote" rows="2"></textarea></label>
+          </div>
+          <fieldset><legend>Passenger-auto caps when bonus applies</legend><div class="form-grid four"><label>Year 1<input id="autoBonus1" type="number" min="0"></label><label>Year 2<input id="autoBonus2" type="number" min="0"></label><label>Year 3<input id="autoBonus3" type="number" min="0"></label><label>Year 4+<input id="autoBonus4" type="number" min="0"></label></div></fieldset>
+          <fieldset><legend>Passenger-auto caps when bonus does not apply</legend><div class="form-grid four"><label>Year 1<input id="autoNoBonus1" type="number" min="0"></label><label>Year 2<input id="autoNoBonus2" type="number" min="0"></label><label>Year 3<input id="autoNoBonus3" type="number" min="0"></label><label>Year 4+<input id="autoNoBonus4" type="number" min="0"></label></div></fieldset>
+          <fieldset><legend>Automation</legend><div class="toggle-grid"><label class="toggle"><input id="autoApplyMidQuarter" type="checkbox"><span>Automatically apply mid-quarter when the entity-level test is triggered</span></label><label class="toggle"><input id="showAdvancedFields" type="checkbox"><span>Show advanced fields by default in the asset wizard</span></label></div></fieldset>
+          <div class="form-actions"><button class="button primary" type="submit">Save settings</button></div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="entityDialog">
+    <form id="entityForm">
+      <div class="dialog-heading"><div><p class="eyebrow">Company or client</p><h2 id="entityDialogTitle">Add company</h2></div><button class="icon-button" type="button" data-close-dialog="entityDialog">×</button></div>
+      <input id="entityId" type="hidden">
+      <div class="form-grid">
+        <label class="wide">Business/client name<input id="entityName" required></label>
+        <label>EIN or reference ID<input id="entityEin"></label>
+        <label>Default state<select id="entityState"></select></label>
+        <label class="wide">Notes<textarea id="entityNotes" rows="3"></textarea></label>
+      </div>
+      <div class="form-actions"><button class="button secondary" type="button" data-close-dialog="entityDialog">Cancel</button><button class="button primary" type="submit">Save company</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="assetDialog" class="large-dialog">
+    <form id="assetForm">
+      <div class="dialog-heading"><div><p class="eyebrow">Guided asset entry</p><h2 id="assetDialogTitle">Add asset</h2></div><button class="icon-button" type="button" data-close-dialog="assetDialog">×</button></div>
+      <input id="assetId" type="hidden">
+      <div class="step-indicator"><span id="stepLabel">Step 1 of 6</span><div><i id="stepProgress"></i></div></div>
+
+      <section class="wizard-step active" data-step="1">
+        <h3>Identify the asset</h3><p class="step-help">Choose the owner and category. Velzarytha supplies a method, life, convention, and eligibility defaults.</p>
+        <div class="form-grid">
+          <label class="wide">Asset name / description<input id="assetName" required placeholder="Example: Dell office computer"></label>
+          <label>Asset tag or ID<div class="inline-input"><input id="assetTag"><button class="mini-button" id="generateTag" type="button">Generate</button></div></label>
+          <label>Company<select id="assetEntity" required></select></label>
+          <label class="wide">Category <button class="tip" type="button" data-tip="The category suggests recovery period, method, convention, book life, ADS life, and special-depreciation eligibility.">ⓘ</button><select id="assetCategory" required></select></label>
+        </div>
+        <div id="methodRecommendation" class="recommendation-box"></div>
+      </section>
+
+      <section class="wizard-step" data-step="2">
+        <h3>Dates and basis</h3><p class="step-help">Placed in service means ready and available for its intended business use.</p>
+        <div class="form-grid">
+          <label>Date acquired<input id="dateAcquired" type="date"></label>
+          <label>Placed in service<input id="placedDate" type="date" required></label>
+          <label>Purchase price / cost basis ($)<input id="costBasis" type="number" min="0" step="0.01" required></label>
+          <label>Trade-in / exchange adjustment ($)<input id="exchangeAdjustment" type="number" step="0.01" value="0"></label>
+          <label>Land / non-depreciable amount ($)<input id="landValue" type="number" min="0" step="0.01" value="0"></label>
+          <label>Business use (%)<input id="businessUse" type="number" min="0" max="100" step="0.01" value="100"></label>
+          <label>Prior federal depreciation ($)<input id="priorFederalDepreciation" type="number" min="0" step="0.01" value="0"></label>
+          <label>State<select id="assetState"></select></label>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="3">
+        <h3>Federal depreciation method</h3><p class="step-help">Automatic convention uses the category and the entity-level mid-quarter test.</p>
+        <div class="form-grid">
+          <label>Recovery period (years)<input id="recoveryPeriod" type="number" min="0" step="0.1" required></label>
+          <label>Method<select id="method"></select></label>
+          <label>Convention<select id="convention"></select></label>
+          <label class="toggle field-toggle"><input id="conventionOverride" type="checkbox"><span>Override automatic convention</span></label>
+          <label>ADS recovery period (years)<input id="adsLife" type="number" min="0" step="0.1"></label>
+          <label class="toggle field-toggle"><input id="adsRequired" type="checkbox"><span>ADS required or elected</span></label>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="4">
+        <h3>Section 179, bonus, and listed property</h3><p class="step-help">Entity-level limits and class elections are applied automatically after the asset is saved.</p>
+        <div class="form-grid">
+          <label>Section 179 elected cost ($)<input id="section179Election" type="number" min="0" step="0.01" value="0"></label>
+          <label>Section 179 priority<input id="section179Priority" type="number" min="1" step="1" value="100"><small>Lower numbers receive the annual limit first.</small></label>
+          <label>Bonus eligibility override<select id="bonusEligibilityOverride"><option value="class-default">Use class election and eligibility rules</option><option value="ineligible">Treat asset as ineligible</option></select></label>
+          <label>Listed property<select id="listedProperty"><option value="false">No</option><option value="true">Yes</option></select></label>
+          <label>Used property<select id="usedProperty"><option value="false">No</option><option value="true">Yes</option></select></label>
+          <label>Used-property acquisition qualifies<select id="usedPropertyEligible"><option value="">Not reviewed</option><option value="true">Yes — unrelated-party requirements reviewed</option><option value="false">No / uncertain</option></select></label>
+          <label>Related-party acquisition<select id="relatedParty"><option value="false">No</option><option value="true">Yes / possible</option></select></label>
+          <label id="qipAttestationField" class="toggle field-toggle"><input id="qipAttested" type="checkbox"><span>QIP eligibility reviewed and confirmed</span></label>
+          <label>Vehicle GVWR (lbs)<input id="vehicleGvwr" type="number" min="0" step="1"></label>
+          <label>Business miles<input id="businessMiles" type="number" min="0" step="1" value="0"></label>
+          <label>Total miles<input id="totalMiles" type="number" min="0" step="1" value="0"></label>
+          <label class="toggle field-toggle"><input id="evidenceAvailable" type="checkbox"><span>Evidence supports business use</span></label>
+          <label class="toggle field-toggle"><input id="evidenceWritten" type="checkbox"><span>Evidence is written</span></label>
+          <label class="wide">Mileage / substantiation summary<textarea id="mileageNotes" rows="3"></textarea></label>
+        </div>
+        <div id="taxValidation" class="inline-alert" hidden></div>
+      </section>
+
+      <section class="wizard-step" data-step="5">
+        <h3>Book and comparison schedules</h3><p class="step-help">Book, ADS, and state comparison schedules do not change the federal election.</p>
+        <div class="form-grid">
+          <label>Book method<select id="bookMethod"><option value="sl">Straight-line</option><option value="units">Units of production — manual periods</option><option value="none">No book depreciation</option></select></label>
+          <label>Book life (years)<input id="bookLife" type="number" min="0" step="0.1"></label>
+          <label>Book salvage value ($)<input id="bookSalvage" type="number" min="0" step="0.01" value="0"></label>
+          <label>Book convention<select id="bookConvention"><option value="full-month">Full-month</option><option value="mid-month">Mid-month</option><option value="full-year">Full-year</option></select></label>
+          <label>Prior book depreciation ($)<input id="priorBookDepreciation" type="number" min="0" step="0.01" value="0"></label>
+          <label>Prior ADS depreciation ($)<input id="priorAdsDepreciation" type="number" min="0" step="0.01" value="0"></label>
+        </div>
+      </section>
+
+      <section class="wizard-step" data-step="6">
+        <h3>Disposal and final review</h3><p class="step-help">Leave disposal fields blank while the asset remains in service.</p>
+        <div class="form-grid">
+          <label>Disposal date<input id="disposalDate" type="date"></label>
+          <label>Gross disposal proceeds ($)<input id="disposalProceeds" type="number" min="0" step="0.01"></label>
+          <label>Disposal expenses ($)<input id="disposalExpenses" type="number" min="0" step="0.01" value="0"></label>
+          <label class="wide">Notes / memo<textarea id="assetNotes" rows="4"></textarea></label>
+        </div>
+        <div id="assetReview" class="review-card"></div>
+      </section>
+
+      <div class="wizard-actions">
+        <button class="button secondary" id="previousStep" type="button">Back</button>
+        <div><button class="button secondary" type="button" data-close-dialog="assetDialog">Cancel</button><button class="button primary" id="nextStep" type="button">Continue</button><button class="button primary" id="saveAsset" type="submit" hidden>Save asset</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="scheduleDialog" class="large-dialog">
+    <div class="dialog-heading"><div><p class="eyebrow">Asset detail</p><h2 id="scheduleTitle">Schedules</h2></div><button class="icon-button" type="button" data-close-dialog="scheduleDialog">×</button></div>
+    <div id="scheduleSummary" class="metric-grid compact"></div>
+    <div id="scheduleWarnings"></div>
+    <div class="schedule-tabs"><button class="active" data-schedule-system="federal">Federal</button><button data-schedule-system="book">Book</button><button data-schedule-system="ads">ADS</button><button data-schedule-system="state">State</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Year</th><th>Beginning basis</th><th>§179</th><th>Bonus</th><th>Regular</th><th>Total</th><th>Accumulated</th><th>Ending basis</th></tr></thead><tbody id="scheduleBody"></tbody></table></div>
+    <div id="disposalScreen"></div>
+    <div class="form-actions"><button class="button secondary" id="printSchedule">Print</button><button class="button secondary" id="downloadSingleSchedule">CSV</button></div>
+  </dialog>
+
+  <dialog id="importDialog" class="large-dialog">
+    <div class="dialog-heading"><div><p class="eyebrow">Bulk asset import</p><h2>Import CSV</h2></div><button class="icon-button" type="button" data-close-dialog="importDialog">×</button></div>
+    <p class="step-help">Use the supplied template. Company rows can be created automatically when the company name does not already exist.</p>
+    <label class="drop-zone">Choose CSV file<input id="csvImportFile" type="file" accept=".csv,text/csv"></label>
+    <div id="importPreview" class="import-preview"><div class="empty-state">No file selected.</div></div>
+    <div class="form-actions"><button class="button secondary" type="button" data-close-dialog="importDialog">Cancel</button><button class="button primary" id="confirmImport" type="button" disabled>Import valid rows</button></div>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/data-tables.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/depreciation-engine.js"></script>
+  <script src="js/validation-engine.js"></script>
+  <script src="js/pdf-engine.js"></script>
+  <script src="js/report-engine.js"></script>
+  <script src="js/self-tests.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

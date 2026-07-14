@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velzarytha Calculation Self-Tests</title>
+  <style>
+    body{max-width:900px;margin:40px auto;padding:0 20px;font:16px/1.5 system-ui;background:#0b0d19;color:#f7f7ff}button{padding:12px 18px;border:0;border-radius:10px;font-weight:800;cursor:pointer}article{margin-top:18px;padding:20px;border:1px solid #333;border-radius:14px}.pass{color:#6de7b4}.fail{color:#ff9cac}li{margin:7px 0}
+  </style>
+</head>
+<body>
+  <h1>Velzarytha calculation self-tests</h1>
+  <p>These tests check selected engine behaviors. They are not a substitute for professional tax-software validation.</p>
+  <button id="run">Run tests</button>
+  <article id="output">Tests have not been run.</article>
+  <script src="../js/data-tables.js"></script>
+  <script src="../js/depreciation-engine.js"></script>
+  <script src="../js/self-tests.js"></script>
+  <script>
+    document.getElementById('run').onclick=()=>{
+      const result=VelzarythaSelfTests.run();
+      document.getElementById('output').innerHTML=`<strong>${result.passed} passed; ${result.failed} failed</strong><ul>${result.results.map(test=>`<li class="${test.passed?'pass':'fail'}">${test.passed?'PASS':'FAIL'} — ${test.name}: ${test.detail}</li>`).join('')}</ul>`;
+    };
+  </script>
+</body>
+</html>

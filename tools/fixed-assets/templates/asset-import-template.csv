@@ -1,0 +1,2 @@
+company,ein,company_state,asset_name,asset_tag,category,date_acquired,placed_in_service,cost_basis,exchange_adjustment,land_value,business_use_percent,recovery_period,method,convention,section179_election,section179_priority,listed_property,vehicle_gvwr,business_miles,total_miles,state,book_life,book_salvage,prior_federal_depreciation,notes
+Example Company,12-3456789,CA,Office computer,COMP-001,computers,2026-02-01,2026-02-01,2500,0,0,100,5,200db,auto,0,100,false,0,0,0,CA,3,0,0,Example only - delete before import

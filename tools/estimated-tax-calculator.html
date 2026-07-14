@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimated Tax Calculator — Payment Planner | Velzarytha</title>
+  <meta name="description" content="Plan estimated tax payments using expected income, deductions, an assumed effective tax rate, credits, withholding, and payments remaining.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#070816">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/tool.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <button class="menu-button" id="menuButton" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="../index.html#tools">Tools</a>
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </nav>
+  </header>
+
+  <main class="tool-main">
+    <div class="breadcrumbs"><a href="../index.html">Home</a> / Estimated Tax Planner</div>
+    <section class="tool-heading">
+      <div>
+        <p class="eyebrow">Free browser-based calculator</p>
+        <h1>Estimated Tax Planner</h1>
+      </div>
+      <p>Estimate a remaining annual liability and divide it into payments using your projected income and effective tax-rate assumption.</p>
+    </section>
+
+
+<section class="calculator-layout">
+  <form class="panel input-panel" id="estimatedTaxForm">
+    <div class="panel-header"><h2>Annual projection</h2><p>Use an estimated effective rate based on your own planning.</p></div>
+    <div class="form-grid">
+      <div class="field"><label for="expectedIncome">Expected annual income ($)</label><input id="expectedIncome" type="number" min="0" step="0.01" value="80000" required></div>
+      <div class="field"><label for="deductions">Estimated deductions ($)</label><input id="deductions" type="number" min="0" step="0.01" value="15000"></div>
+      <div class="field"><label for="effectiveRate">Estimated effective tax rate (%)</label><input id="effectiveRate" type="number" min="0" max="100" step="0.01" value="18" required></div>
+      <div class="field"><label for="taxCredits">Estimated tax credits ($)</label><input id="taxCredits" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="withholding">Expected withholding / payments ($)</label><input id="withholding" type="number" min="0" step="0.01" value="8000"></div>
+      <div class="field"><label for="paymentsLeft">Payments remaining</label><input id="paymentsLeft" type="number" min="1" max="12" step="1" value="4" required></div>
+    </div>
+    <div class="form-actions"><button class="button button-primary" type="submit">Create estimate</button><button class="button button-secondary" type="reset">Reset</button></div>
+    <p class="form-message" id="estimatedTaxMessage" aria-live="polite"></p>
+  </form>
+
+  <section class="panel results-panel">
+    <div class="result-empty" id="estimatedTaxEmpty"><div><span>Q</span><p>Your estimated payment plan will appear here.</p></div></div>
+    <div class="result-content" id="estimatedTaxContent" hidden>
+      <div class="panel-header"><h2>Estimated tax plan</h2><p>Projection using your assumed effective rate</p></div>
+      <div class="result-grid">
+        <article class="metric"><p>Projected taxable amount</p><strong id="projectedTaxable">$0.00</strong></article>
+        <article class="metric"><p>Projected tax after credits</p><strong id="projectedTax">$0.00</strong></article>
+        <article class="metric"><p>Remaining estimated tax</p><strong id="remainingTax">$0.00</strong></article>
+        <article class="metric highlight"><p>Amount per remaining payment</p><strong id="paymentAmount">$0.00</strong></article>
+      </div>
+      <p class="result-note">This tool does not calculate statutory tax brackets or safe-harbor requirements. It divides your projected remaining liability using the assumptions entered.</p>
+    </div>
+  </section>
+</section>
+
+  </main>
+
+
+<section class="content-section">
+  <div><p class="eyebrow">Planning tool</p><h2>Turn an annual projection into manageable payments.</h2></div>
+  <div class="content-body"><p>This calculator estimates taxable income after deductions, applies the effective rate you enter, subtracts credits and expected withholding, and divides the remainder over the selected number of payments.</p><h3>Use an informed effective rate</h3><p>A tax bracket is not the same as an effective tax rate. Use a rate based on a reliable projection, prior-year comparison, or professional calculation.</p></div>
+</section>
+
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <div class="footer-links">
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/privacy.html">Privacy</a>
+      <a href="../pages/terms.html">Terms</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </div>
+    <p>© <span data-current-year></span> Velzarytha.</p>
+  </footer>
+
+  <script src="../js/site.js"></script>
+  <script src="../js/estimated-tax.js"></script>
+</body>
+</html>

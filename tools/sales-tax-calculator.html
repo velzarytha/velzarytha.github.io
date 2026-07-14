@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Tax Calculator — Price, Tax and Total | Velzarytha</title>
+  <meta name="description" content="Calculate sales tax, taxable amount, discounts, shipping, and final purchase total using your local tax rate.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#070816">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/tool.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <button class="menu-button" id="menuButton" type="button" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav id="mainNav" aria-label="Main navigation">
+      <a href="../index.html#tools">Tools</a>
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </nav>
+  </header>
+
+  <main class="tool-main">
+    <div class="breadcrumbs"><a href="../index.html">Home</a> / Sales Tax Calculator</div>
+    <section class="tool-heading">
+      <div>
+        <p class="eyebrow">Free browser-based calculator</p>
+        <h1>Sales Tax Calculator</h1>
+      </div>
+      <p>Calculate the taxable amount, sales tax, and final total using the rate and transaction assumptions you enter.</p>
+    </section>
+
+
+<section class="calculator-layout">
+  <form class="panel input-panel" id="salesTaxForm">
+    <div class="panel-header"><h2>Transaction details</h2><p>Enter the amounts and the applicable sales-tax rate.</p></div>
+    <div class="form-grid">
+      <div class="field"><label for="subtotal">Item subtotal ($)</label><input id="subtotal" type="number" min="0" step="0.01" value="100" required></div>
+      <div class="field"><label for="taxRate">Sales-tax rate (%)</label><input id="taxRate" type="number" min="0" max="100" step="0.001" value="8.25" required></div>
+      <div class="field"><label for="discount">Discount ($)</label><input id="discount" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field"><label for="shipping">Shipping ($)</label><input id="shipping" type="number" min="0" step="0.01" value="0"></div>
+      <div class="field full"><div class="checkbox-row"><input id="taxShipping" type="checkbox"><label for="taxShipping">Include shipping in the taxable amount</label></div></div>
+    </div>
+    <div class="form-actions"><button class="button button-primary" type="submit">Calculate total</button><button class="button button-secondary" type="reset">Reset</button></div>
+    <p class="form-message" id="salesTaxMessage" aria-live="polite"></p>
+  </form>
+
+  <section class="panel results-panel">
+    <div class="result-empty" id="salesTaxEmpty"><div><span>%</span><p>Your transaction summary will appear here.</p></div></div>
+    <div class="result-content" id="salesTaxContent" hidden>
+      <div class="panel-header"><h2>Sales-tax results</h2><p>Based on the rate and assumptions entered</p></div>
+      <div class="result-grid">
+        <article class="metric"><p>Taxable amount</p><strong id="taxableAmount">$0.00</strong></article>
+        <article class="metric"><p>Sales tax</p><strong id="salesTaxAmount">$0.00</strong></article>
+        <article class="metric"><p>Shipping</p><strong id="shippingResult">$0.00</strong></article>
+        <article class="metric highlight"><p>Final total</p><strong id="finalTotal">$0.00</strong></article>
+      </div>
+      <p class="result-note">The correct sales-tax rate and treatment of discounts or shipping depend on the jurisdiction and transaction.</p>
+    </div>
+  </section>
+</section>
+
+  </main>
+
+
+<section class="content-section">
+  <div><p class="eyebrow">Calculation</p><h2>Use the rate that applies to the transaction.</h2></div>
+  <div class="content-body"><p>The calculator subtracts the discount from the item subtotal, optionally adds shipping to the taxable base, applies the entered tax rate, and then adds tax and shipping to the final total.</p><h3>Before relying on the result</h3><p>Check whether the product or service is taxable, which jurisdiction controls the sale, and whether shipping or discounts change the taxable amount.</p></div>
+</section>
+
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="../index.html"><span class="brand-mark">V</span><span>Velzarytha</span></a>
+    <div class="footer-links">
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/privacy.html">Privacy</a>
+      <a href="../pages/terms.html">Terms</a>
+      <a href="../pages/disclaimer.html">Disclaimer</a>
+    </div>
+    <p>© <span data-current-year></span> Velzarytha.</p>
+  </footer>
+
+  <script src="../js/site.js"></script>
+  <script src="../js/sales-tax.js"></script>
+</body>
+</html>
