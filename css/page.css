@@ -1,0 +1,24 @@
+.page-main {
+  width: min(900px, calc(100% - 28px));
+  min-height: 65vh;
+  margin: 0 auto;
+  padding: 100px 0 80px;
+}
+.page-main h1 {
+  margin: 0 0 42px;
+  font-size: clamp(3.3rem, 8vw, 6.5rem);
+  line-height: .95;
+  letter-spacing: -.07em;
+}
+.page-content {
+  padding: 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(18,22,48,.62);
+  box-shadow: var(--shadow);
+  color: var(--muted);
+}
+.page-content h2, .page-content h3 { color: var(--text); }
+.page-content h2 { margin-top: 32px; }
+.page-content h2:first-child { margin-top: 0; }
+.page-content a { color: var(--cyan); }
