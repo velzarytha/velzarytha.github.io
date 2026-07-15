@@ -67,3 +67,230 @@
 @media(max-width:1100px){.dashboard-grid{grid-template-columns:1fr}.summary-strip{grid-template-columns:repeat(3,1fr)}.election-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.heading-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.summary-strip,.election-grid,.report-kpis,.import-summary{grid-template-columns:1fr}.issue-card{grid-template-columns:auto 1fr}.issue-card button{grid-column:1/-1}.audit-card{grid-template-columns:1fr}.review-toolbar{display:grid}.sidebar{overflow-x:auto}.sidebar nav{display:flex!important;min-width:max-content}.nav-item,.nav-item:not(.active){min-width:72px}.form-document{min-width:760px}.paper-preview{overflow:auto}}
 @media print{#view-form4562 .paper-preview,#view-reports .report-paper{display:block}.form-watermark{color:rgba(180,0,0,.12)}}
+
+/* ==================================================
+   IMPROVED LIGHT MODE
+   Full light-mode enhancement
+   ================================================== */
+
+:root[data-theme="light"] {
+  --bg: #f4f7fc;
+  --bg2: #eaf0f8;
+  --surface: #ffffff;
+  --surface2: #f7f9fd;
+  --text: #182033;
+  --muted: #657087;
+  --line: rgba(38, 52, 82, 0.14);
+  --primary: #6655d8;
+  --cyan: #087fa7;
+  --danger: #b52f49;
+  --success: #14784e;
+  --shadow: 0 12px 32px rgba(44, 58, 89, 0.08);
+}
+
+:root[data-theme="light"] body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(125, 105, 230, 0.10), transparent 30rem),
+    radial-gradient(circle at 100% 10%, rgba(74, 194, 230, 0.10), transparent 30rem),
+    linear-gradient(180deg, #f8faff 0%, #f1f5fb 100%);
+}
+
+:root[data-theme="light"] .disclaimer-banner {
+  color: #24304a;
+  border-bottom: 1px solid rgba(55, 100, 150, 0.15);
+  background: linear-gradient(90deg, #ddd9ff, #b8ebfb);
+}
+
+:root[data-theme="light"] .disclaimer-banner button {
+  color: #24304a;
+}
+
+:root[data-theme="light"] .app-header {
+  border-bottom-color: rgba(38, 52, 82, 0.13);
+  background: rgba(255, 255, 255, 0.90);
+  box-shadow:
+    0 8px 28px rgba(45, 58, 86, 0.07),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+:root[data-theme="light"] .brand {
+  color: #192137;
+}
+
+:root[data-theme="light"] .tax-year-status select,
+:root[data-theme="light"] .icon-button {
+  color: #202a42;
+  border-color: rgba(38, 52, 82, 0.15);
+  background: #f8faff;
+}
+
+:root[data-theme="light"] .sidebar {
+  border-right-color: rgba(38, 52, 82, 0.12);
+  background: linear-gradient(180deg, #27324e 0%, #202a43 100%);
+  box-shadow: 8px 0 28px rgba(38, 49, 77, 0.08);
+}
+
+:root[data-theme="light"] .nav-item {
+  color: #b9c4d9;
+}
+
+:root[data-theme="light"] .nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .nav-item.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(122, 105, 230, 0.46), rgba(70, 181, 221, 0.24));
+  box-shadow:
+    inset 3px 0 #9d8cff,
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] .sidebar-note {
+  color: #aeb9ce;
+}
+
+:root[data-theme="light"] .main-content {
+  background: transparent;
+}
+
+:root[data-theme="light"] .page-heading h1,
+:root[data-theme="light"] .panel-heading h2,
+:root[data-theme="light"] .section-title h2 {
+  color: #171e31;
+}
+
+:root[data-theme="light"] .page-heading p:not(.eyebrow),
+:root[data-theme="light"] .panel-heading p,
+:root[data-theme="light"] .section-title p {
+  color: var(--muted);
+}
+
+:root[data-theme="light"] .metric,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .entity-card,
+:root[data-theme="light"] .issue-card,
+:root[data-theme="light"] .audit-card,
+:root[data-theme="light"] .test-results {
+  color: var(--text);
+  border-color: rgba(38, 52, 82, 0.13);
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow:
+    0 12px 30px rgba(44, 58, 89, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+:root[data-theme="light"] .metric {
+  background: linear-gradient(145deg, #ffffff, #f7f9fd);
+}
+
+:root[data-theme="light"] .metric strong {
+  color: #171e31;
+}
+
+:root[data-theme="light"] .metric span,
+:root[data-theme="light"] .metric small {
+  color: #68738a;
+}
+
+:root[data-theme="light"] .alert.info {
+  color: #23415b;
+  border-color: rgba(43, 165, 211, 0.28);
+  background: linear-gradient(135deg, rgba(219, 241, 252, 0.92), rgba(231, 240, 255, 0.92));
+}
+
+:root[data-theme="light"] .status-item {
+  border-color: rgba(38, 52, 82, 0.12);
+  background: #f8faff;
+}
+
+:root[data-theme="light"] .status-item:hover {
+  background: #f2f6fc;
+}
+
+:root[data-theme="light"] .button {
+  color: #20283d;
+  border-color: rgba(38, 52, 82, 0.16);
+  background: #f8faff;
+}
+
+:root[data-theme="light"] .button:hover {
+  border-color: rgba(102, 85, 216, 0.42);
+  background: #f1f4fb;
+}
+
+:root[data-theme="light"] .button.primary {
+  color: #101529;
+  border: 0;
+  background: linear-gradient(135deg, #c9c1ff, #71d9f5);
+  box-shadow: 0 9px 22px rgba(76, 135, 205, 0.18);
+}
+
+:root[data-theme="light"] form input,
+:root[data-theme="light"] form select,
+:root[data-theme="light"] form textarea,
+:root[data-theme="light"] .toolbar input,
+:root[data-theme="light"] .toolbar select,
+:root[data-theme="light"] .report-controls select,
+:root[data-theme="light"] .review-toolbar select,
+:root[data-theme="light"] .review-toolbar input {
+  color: #1d263b;
+  border-color: rgba(38, 52, 82, 0.16);
+  background: #ffffff;
+}
+
+:root[data-theme="light"] input::placeholder,
+:root[data-theme="light"] textarea::placeholder {
+  color: #929caf;
+}
+
+:root[data-theme="light"] form input:focus,
+:root[data-theme="light"] form select:focus,
+:root[data-theme="light"] form textarea:focus {
+  border-color: #7564dd;
+  box-shadow: 0 0 0 3px rgba(117, 100, 221, 0.12);
+}
+
+:root[data-theme="light"] th {
+  color: #657087;
+  background: #f7f9fd;
+}
+
+:root[data-theme="light"] tbody tr:hover {
+  background: #f5f8fc;
+}
+
+:root[data-theme="light"] th,
+:root[data-theme="light"] td {
+  border-bottom-color: rgba(38, 52, 82, 0.11);
+}
+
+:root[data-theme="light"] dialog {
+  color: var(--text);
+  border-color: rgba(38, 52, 82, 0.14);
+  background: #f8faff;
+  box-shadow: 0 30px 90px rgba(31, 42, 66, 0.24);
+}
+
+:root[data-theme="light"] dialog::backdrop {
+  background: rgba(25, 33, 52, 0.44);
+}
+
+@media (max-width: 680px) {
+  :root[data-theme="light"] .sidebar {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: #202a43;
+  }
+
+  :root[data-theme="light"] .nav-item {
+    color: #b9c4d9;
+  }
+
+  :root[data-theme="light"] .nav-item.active {
+    color: #ffffff;
+  }
+}
