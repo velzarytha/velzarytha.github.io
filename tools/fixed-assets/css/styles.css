@@ -294,3 +294,139 @@
     color: #ffffff;
   }
 }
+
+/* ==================================================
+   RESPONSIVE NAVIGATION LABEL FIX
+   Keeps labels visible on tablets and phones.
+   Place this block last so it overrides older rules.
+   ================================================== */
+
+/* Tablet and narrow desktop: use a readable left sidebar. */
+@media (min-width: 681px) and (max-width: 1000px) {
+  .app-shell {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: 20px 12px;
+  }
+
+  .sidebar nav {
+    display: grid;
+    gap: 6px;
+  }
+
+  .nav-item,
+  .nav-item:not(.active) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 11px;
+    width: 100%;
+    min-width: 0;
+    padding: 11px 13px;
+    font-size: 13px !important;
+    line-height: 1.25;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .nav-item span {
+    flex: 0 0 auto;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .sidebar-note {
+    display: block;
+    padding: 12px;
+    font-size: 11px;
+  }
+}
+
+/* Phone: use a horizontally scrollable bottom navigation with labels. */
+@media (max-width: 680px) {
+  .sidebar {
+    position: fixed;
+    z-index: 30;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 76px;
+    padding: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: var(--bg2);
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar nav {
+    display: flex !important;
+    grid-template-columns: none;
+    gap: 3px;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .nav-item,
+  .nav-item:not(.active) {
+    display: flex;
+    flex: 1 0 82px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 82px;
+    min-height: 62px;
+    padding: 5px 7px;
+    font-size: 9px !important;
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .nav-item span {
+    display: block;
+    flex: 0 0 auto;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .nav-item.active,
+  .nav-item:not(.active) {
+    font-size: 9px !important;
+  }
+
+  .main-content {
+    padding-bottom: 98px;
+  }
+
+  .sidebar-note {
+    display: none;
+  }
+}
+
+/* Preserve the dark bottom navigation when light mode is active. */
+@media (max-width: 680px) {
+  :root[data-theme="light"] .sidebar {
+    color: #ffffff;
+    border-top-color: rgba(255, 255, 255, 0.12);
+    background: #202a43;
+  }
+
+  :root[data-theme="light"] .nav-item,
+  :root[data-theme="light"] .nav-item:not(.active) {
+    color: #b9c4d9;
+  }
+
+  :root[data-theme="light"] .nav-item:hover,
+  :root[data-theme="light"] .nav-item.active {
+    color: #ffffff;
+  }
+}
+
