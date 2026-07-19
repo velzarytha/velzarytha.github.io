@@ -3,14 +3,14 @@
 
   const CAPITAL_GAINS_SCRIPT_URL =
     document.currentScript?.src || new URL("../js/capital-gains.js", window.location.href).href;
-  const PDFJS_ASSET_BASE_URL = new URL("./vendor/pdfjs/", CAPITAL_GAINS_SCRIPT_URL).href;
+  const PDFJS_ASSET_BASE_URL = new URL("./", CAPITAL_GAINS_SCRIPT_URL).href;
   const PDFJS_MODULE_URL = new URL("./pdf.min.js", PDFJS_ASSET_BASE_URL).href;
   const PDFJS_WORKER_URL = new URL("./pdf.worker.min.js", PDFJS_ASSET_BASE_URL).href;
-  const PDFJS_CMAP_URL = new URL("./cmaps/", PDFJS_ASSET_BASE_URL).href;
-  const PDFJS_STANDARD_FONT_URL = new URL("./standard_fonts/", PDFJS_ASSET_BASE_URL).href;
-  const PDFJS_WASM_URL = new URL("./wasm/", PDFJS_ASSET_BASE_URL).href;
-  const PDFJS_ICC_URL = new URL("./iccs/", PDFJS_ASSET_BASE_URL).href;
-  const PDF_MAX_BYTES = 60 * 1024 * 1024;
+  /* Supporting PDF.js files were uploaded directly inside /js/. */
+  const PDFJS_CMAP_URL = PDFJS_ASSET_BASE_URL;
+  const PDFJS_STANDARD_FONT_URL = PDFJS_ASSET_BASE_URL;
+  const PDFJS_WASM_URL = PDFJS_ASSET_BASE_URL;
+  const PDFJS_ICC_URL = PDFJS_ASSET_BASE_URL;  const PDF_MAX_BYTES = 60 * 1024 * 1024;
   const PDF_MAX_PAGES = 500;
   let pdfJsModulePromise = null;
 
