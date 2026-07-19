@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Organize brokerage transactions, review capital gains and losses, import CSV or consolidated 1099 information, and estimate potential federal capital gains tax impact."
+  >
+
+  <meta name="theme-color" content="#10131a">
+
+  <title>Capital Gains Estimator | Velzarytha</title>
+
+  <!-- Shared Velzarytha styles -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/tool.css">
+
+  <!-- Capital Gains Estimator styles -->
+  <link
+    rel="stylesheet"
+    href="../css/capital-gains-estimator.css"
+  >
+
+  <!-- Shared site behavior -->
+  <script src="../js/site.js" defer></script>
+
+  <!-- Capital Gains Estimator behavior -->
+  <script src="../js/capital-gains.js" defer></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#mainContent">
+    Skip to main content
+  </a>
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a
+        class="brand"
+        href="../index.html"
+        aria-label="Velzarytha homepage"
+      >
+        <span class="brand__mark" aria-hidden="true">
+          V
+        </span>
+
+        <span class="brand__text">
+          <strong>Velzarytha</strong>
+          <small>Practical tax planning tools</small>
+        </span>
+      </a>
+
+      <nav
+        class="site-nav"
+        aria-label="Primary navigation"
+      >
+        <a href="../index.html">
+          Home
+        </a>
+
+        <a href="./fixed-assets/index.html">
+          Depreciation
+        </a>
+
+        <a
+          href="./capital-gains-estimator.html"
+          aria-current="page"
+        >
+          Capital Gains
+        </a>
+      </nav>
+
+      <button
+        class="theme-button"
+        id="themeToggle"
+        type="button"
+        aria-label="Change color theme"
+        aria-pressed="false"
+      >
+        <span aria-hidden="true">◐</span>
+        <span class="theme-button__text">Theme</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================
+       MAIN APPLICATION
+       ===================================================== -->
+
+  <main id="mainContent" class="app-shell">
+    <!-- Page heading -->
+
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">
+          Velzarytha Tax Tools
+        </p>
+
+        <h1>Capital Gains Estimator</h1>
+
+        <p>
+          Organize brokerage sale transactions, review
+          short-term and long-term gains or losses, and prepare
+          planning summaries for Form 8949 and Schedule D.
+        </p>
+      </div>
+
+      <div class="page-heading__actions">
+        <button
+          class="button button--secondary"
+          id="saveWorkspaceButton"
+          type="button"
+        >
+          Save workspace
+        </button>
+
+        <button
+          class="button button--secondary"
+          id="backupButton"
+          type="button"
+        >
+          Download backup
+        </button>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+
+    <aside
+      class="notice notice--important"
+      aria-labelledby="planningNoticeTitle"
+    >
+      <div class="notice__icon" aria-hidden="true">
+        !
+      </div>
+
+      <div>
+        <h2 id="planningNoticeTitle">
+          Planning and organization tool
+        </h2>
+
+        <p>
+          This tool does not file a tax return, calculate final
+          tax liability, or replace professional tax advice.
+          Imported information and calculations must be checked
+          against the original brokerage statement.
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main totals -->
+
+    <section
+      class="workspace-status"
+      aria-label="Workspace totals"
+    >
+      <article class="status-card">
+        <span>Transactions</span>
+        <strong id="transactionCount">0</strong>
+        <small>Entered or imported</small>
+      </article>
+
+      <article class="status-card">
+        <span>Proceeds</span>
+        <strong id="totalProceeds">$0.00</strong>
+        <small>Total sale proceeds</small>
+      </article>
+
+      <article class="status-card">
+        <span>Cost basis</span>
+        <strong id="totalBasis">$0.00</strong>
+        <small>Recorded cost or other basis</small>
+      </article>
+
+      <article class="status-card">
+        <span>Net gain/loss</span>
+        <strong id="netGainLoss">$0.00</strong>
+        <small>Before final tax treatment</small>
+      </article>
+    </section>
+
+    <!-- Workspace layout -->
+
+    <div class="app-layout">
+      <!-- Sidebar navigation -->
+
+      <aside class="app-sidebar">
+        <nav
+          class="workspace-nav"
+          aria-label="Capital gains workspace"
+        >
+          <button
+            class="workspace-nav__item is-active"
+            type="button"
+            data-view-target="overviewView"
+            aria-controls="overviewView"
+            aria-selected="true"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              ◫
+            </span>
+
+            <span class="workspace-nav__label">
+              Overview
+            </span>
+          </button>
+
+          <button
+            class="workspace-nav__item"
+            type="button"
+            data-view-target="transactionsView"
+            aria-controls="transactionsView"
+            aria-selected="false"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              ↕
+            </span>
+
+            <span class="workspace-nav__label">
+              Transactions
+            </span>
+          </button>
+
+          <button
+            class="workspace-nav__item"
+            type="button"
+            data-view-target="importView"
+            aria-controls="importView"
+            aria-selected="false"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              ⇧
+            </span>
+
+            <span class="workspace-nav__label">
+              Import
+            </span>
+          </button>
+
+          <button
+            class="workspace-nav__item"
+            type="button"
+            data-view-target="reviewView"
+            aria-controls="reviewView"
+            aria-selected="false"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
+            <span class="workspace-nav__label">
+              Review
+            </span>
+          </button>
+
+          <button
+            class="workspace-nav__item"
+            type="button"
+            data-view-target="estimateView"
+            aria-controls="estimateView"
+            aria-selected="false"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              %
+            </span>
+
+            <span class="workspace-nav__label">
+              Estimate
+            </span>
+          </button>
+
+          <button
+            class="workspace-nav__item"
+            type="button"
+            data-view-target="reportsView"
+            aria-controls="reportsView"
+            aria-selected="false"
+          >
+            <span
+              class="workspace-nav__icon"
+              aria-hidden="true"
+            >
+              ▤
+            </span>
+
+            <span class="workspace-nav__label">
+              Reports
+            </span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Workspace content -->
+
+      <div class="workspace-content">
+        <!-- =================================================
+             OVERVIEW VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view is-active"
+          id="overviewView"
+          aria-labelledby="overviewTitle"
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Workspace overview
+              </p>
+
+              <h2 id="overviewTitle">
+                Capital-gains workspace
+              </h2>
+
+              <p>
+                Add transactions manually or import brokerage
+                information. Review all entries before using the
+                estimate or generating reports.
+              </p>
+            </div>
+
+            <button
+              class="button button--primary"
+              id="overviewAddTransactionButton"
+              type="button"
+            >
+              Add transaction
+            </button>
+          </div>
+
+          <div class="summary-grid">
+            <!-- Short-term summary -->
+
+            <article class="panel">
+              <div class="panel__heading">
+                <div>
+                  <h3>Short-term transactions</h3>
+
+                  <p>
+                    Assets generally held for one year or less.
+                  </p>
+                </div>
+
+                <span
+                  class="badge"
+                  id="shortTermTransactionCount"
+                >
+                  0 transactions
+                </span>
+              </div>
+
+              <dl class="summary-list">
+                <div>
+                  <dt>Proceeds</dt>
+                  <dd id="shortTermProceeds">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Cost basis</dt>
+                  <dd id="shortTermBasis">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Adjustments</dt>
+                  <dd id="shortTermAdjustments">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div class="summary-list__total">
+                  <dt>Net gain/loss</dt>
+                  <dd id="shortTermGainLoss">
+                    $0.00
+                  </dd>
+                </div>
+              </dl>
+            </article>
+
+            <!-- Long-term summary -->
+
+            <article class="panel">
+              <div class="panel__heading">
+                <div>
+                  <h3>Long-term transactions</h3>
+
+                  <p>
+                    Assets generally held for more than one year.
+                  </p>
+                </div>
+
+                <span
+                  class="badge"
+                  id="longTermTransactionCount"
+                >
+                  0 transactions
+                </span>
+              </div>
+
+              <dl class="summary-list">
+                <div>
+                  <dt>Proceeds</dt>
+                  <dd id="longTermProceeds">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Cost basis</dt>
+                  <dd id="longTermBasis">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Adjustments</dt>
+                  <dd id="longTermAdjustments">
+                    $0.00
+                  </dd>
+                </div>
+
+                <div class="summary-list__total">
+                  <dt>Net gain/loss</dt>
+                  <dd id="longTermGainLoss">
+                    $0.00
+                  </dd>
+                </div>
+              </dl>
+            </article>
+          </div>
+
+          <!-- Workspace validation checks -->
+
+          <article class="panel">
+            <div class="panel__heading">
+              <div>
+                <h3>Workspace checks</h3>
+
+                <p>
+                  Missing information and other issues requiring
+                  review will appear here.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="empty-state"
+              id="overviewChecksEmpty"
+            >
+              <span
+                class="empty-state__icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <h4>No transactions entered</h4>
+
+              <p>
+                Add a transaction or import brokerage
+                information to begin validation.
+              </p>
+            </div>
+
+            <div
+              class="issue-list"
+              id="overviewIssueList"
+              hidden
+            ></div>
+          </article>
+        </section>
+
+        <!-- =================================================
+             TRANSACTIONS VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view"
+          id="transactionsView"
+          aria-labelledby="transactionsTitle"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Transaction organizer
+              </p>
+
+              <h2 id="transactionsTitle">
+                Brokerage transactions
+              </h2>
+
+              <p>
+                Enter individual 1099-B transactions and review
+                imported brokerage records.
+              </p>
+            </div>
+
+            <button
+              class="button button--primary"
+              id="addTransactionButton"
+              type="button"
+            >
+              Add transaction
+            </button>
+          </div>
+
+          <!-- Transaction form -->
+
+          <div
+            class="transaction-form-panel"
+            id="transactionFormPanel"
+            hidden
+          >
+            <div class="panel">
+              <div class="panel__heading">
+                <div>
+                  <p class="eyebrow">
+                    Transaction editor
+                  </p>
+
+                  <h3 id="transactionFormTitle">
+                    Add transaction
+                  </h3>
+                </div>
+
+                <button
+                  class="icon-button"
+                  id="closeTransactionFormButton"
+                  type="button"
+                  aria-label="Close transaction form"
+                >
+                  ×
+                </button>
+              </div>
+
+              <form
+                id="transactionForm"
+                novalidate
+              >
+                <input
+                  id="transactionId"
+                  name="transactionId"
+                  type="hidden"
+                >
+
+                <!-- Brokerage information -->
+
+                <fieldset class="form-section">
+                  <legend>Brokerage information</legend>
+
+                  <div class="form-grid">
+                    <div class="form-field">
+                      <label for="brokerName">
+                        Broker name
+                      </label>
+
+                      <input
+                        id="brokerName"
+                        name="brokerName"
+                        type="text"
+                        maxlength="100"
+                        autocomplete="organization"
+                        placeholder="Example: Fidelity"
+                      >
+
+                      <p
+                        class="field-error"
+                        id="brokerNameError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="accountLabel">
+                        Account label
+                      </label>
+
+                      <input
+                        id="accountLabel"
+                        name="accountLabel"
+                        type="text"
+                        maxlength="50"
+                        placeholder="Example: Individual ••••1234"
+                      >
+
+                      <p class="field-hint">
+                        Do not enter a complete brokerage account
+                        number.
+                      </p>
+
+                      <p
+                        class="field-error"
+                        id="accountLabelError"
+                      ></p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Security and dates -->
+
+                <fieldset class="form-section">
+                  <legend>Security and dates</legend>
+
+                  <div class="form-grid">
+                    <div class="form-field form-field--wide">
+                      <label for="assetDescription">
+                        Description of property
+                        <span aria-hidden="true">*</span>
+                      </label>
+
+                      <input
+                        id="assetDescription"
+                        name="assetDescription"
+                        type="text"
+                        maxlength="150"
+                        required
+                        placeholder="Example: 25 shares Apple Inc."
+                      >
+
+                      <p
+                        class="field-error"
+                        id="assetDescriptionError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="symbolCusip">
+                        Symbol or CUSIP
+                      </label>
+
+                      <input
+                        id="symbolCusip"
+                        name="symbolCusip"
+                        type="text"
+                        maxlength="25"
+                        placeholder="Example: AAPL"
+                      >
+
+                      <p
+                        class="field-error"
+                        id="symbolCusipError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="dateAcquired">
+                        Date acquired
+                      </label>
+
+                      <input
+                        id="dateAcquired"
+                        name="dateAcquired"
+                        type="date"
+                      >
+
+                      <label class="checkbox-row">
+                        <input
+                          id="dateAcquiredVarious"
+                          name="dateAcquiredVarious"
+                          type="checkbox"
+                        >
+
+                        <span>
+                          Broker reports “Various”
+                        </span>
+                      </label>
+
+                      <p
+                        class="field-error"
+                        id="dateAcquiredError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="dateSold">
+                        Date sold or disposed
+                        <span aria-hidden="true">*</span>
+                      </label>
+
+                      <input
+                        id="dateSold"
+                        name="dateSold"
+                        type="date"
+                        required
+                      >
+
+                      <p
+                        class="field-error"
+                        id="dateSoldError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="termOverride">
+                        Holding period
+                      </label>
+
+                      <select
+                        id="termOverride"
+                        name="termOverride"
+                      >
+                        <option value="auto">
+                          Calculate from dates
+                        </option>
+
+                        <option value="short">
+                          Short-term
+                        </option>
+
+                        <option value="long">
+                          Long-term
+                        </option>
+
+                        <option value="unknown">
+                          Needs review
+                        </option>
+                      </select>
+
+                      <p class="field-hint">
+                        Use an override when the statement reports
+                        “Various” or an acquisition date is
+                        unavailable.
+                      </p>
+
+                      <p
+                        class="field-error"
+                        id="termOverrideError"
+                      ></p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Transaction amounts -->
+
+                <fieldset class="form-section">
+                  <legend>Transaction amounts</legend>
+
+                  <div class="form-grid">
+                    <div class="form-field">
+                      <label for="proceeds">
+                        Proceeds
+                        <span aria-hidden="true">*</span>
+                      </label>
+
+                      <div class="money-input">
+                        <span aria-hidden="true">$</span>
+
+                        <input
+                          id="proceeds"
+                          name="proceeds"
+                          type="text"
+                          inputmode="decimal"
+                          autocomplete="off"
+                          required
+                          placeholder="0.00"
+                        >
+                      </div>
+
+                      <p
+                        class="field-error"
+                        id="proceedsError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="costBasis">
+                        Cost or other basis
+                      </label>
+
+                      <div class="money-input">
+                        <span aria-hidden="true">$</span>
+
+                        <input
+                          id="costBasis"
+                          name="costBasis"
+                          type="text"
+                          inputmode="decimal"
+                          autocomplete="off"
+                          placeholder="0.00"
+                        >
+                      </div>
+
+                      <label class="checkbox-row">
+                        <input
+                          id="costBasisMissing"
+                          name="costBasisMissing"
+                          type="checkbox"
+                        >
+
+                        <span>
+                          Cost basis is missing
+                        </span>
+                      </label>
+
+                      <p
+                        class="field-error"
+                        id="costBasisError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="fees">
+                        Selling fees
+                      </label>
+
+                      <div class="money-input">
+                        <span aria-hidden="true">$</span>
+
+                        <input
+                          id="fees"
+                          name="fees"
+                          type="text"
+                          inputmode="decimal"
+                          autocomplete="off"
+                          placeholder="0.00"
+                        >
+                      </div>
+
+                      <p class="field-hint">
+                        Enter fees separately only when they are
+                        not already reflected in proceeds or cost
+                        basis.
+                      </p>
+
+                      <p
+                        class="field-error"
+                        id="feesError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="adjustmentCode">
+                        Adjustment code
+                      </label>
+
+                      <select
+                        id="adjustmentCode"
+                        name="adjustmentCode"
+                      >
+                        <option value="">
+                          No adjustment
+                        </option>
+
+                        <option value="B">
+                          B — Incorrect basis
+                        </option>
+
+                        <option value="T">
+                          T — Incorrect gain/loss type
+                        </option>
+
+                        <option value="W">
+                          W — Wash-sale amount
+                        </option>
+
+                        <option value="O">
+                          O — Other adjustment
+                        </option>
+
+                        <option value="MULTIPLE">
+                          Multiple codes
+                        </option>
+                      </select>
+
+                      <p class="field-hint">
+                        Record adjustments shown on the brokerage
+                        statement. This version does not
+                        independently identify or calculate wash
+                        sales.
+                      </p>
+
+                      <p
+                        class="field-error"
+                        id="adjustmentCodeError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="adjustmentAmount">
+                        Adjustment amount
+                      </label>
+
+                      <div class="money-input">
+                        <span aria-hidden="true">$</span>
+
+                        <input
+                          id="adjustmentAmount"
+                          name="adjustmentAmount"
+                          type="text"
+                          inputmode="decimal"
+                          autocomplete="off"
+                          placeholder="0.00"
+                        >
+                      </div>
+
+                      <p
+                        class="field-error"
+                        id="adjustmentAmountError"
+                      ></p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Reporting category -->
+
+                <fieldset class="form-section">
+                  <legend>Reporting category</legend>
+
+                  <div class="form-grid">
+                    <div class="form-field">
+                      <label for="basisReported">
+                        Basis reporting status
+                      </label>
+
+                      <select
+                        id="basisReported"
+                        name="basisReported"
+                      >
+                        <option value="reported">
+                          Basis reported to IRS
+                        </option>
+
+                        <option value="not-reported">
+                          Basis not reported to IRS
+                        </option>
+
+                        <option value="no-1099b">
+                          Form 1099-B not received
+                        </option>
+
+                        <option value="unknown">
+                          Needs review
+                        </option>
+                      </select>
+
+                      <p
+                        class="field-error"
+                        id="basisReportedError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field">
+                      <label for="form8949Category">
+                        Form 8949 category
+                      </label>
+
+                      <select
+                        id="form8949Category"
+                        name="form8949Category"
+                      >
+                        <option value="auto">
+                          Determine automatically
+                        </option>
+
+                        <option value="A">
+                          A — Short-term, basis reported
+                        </option>
+
+                        <option value="B">
+                          B — Short-term, basis not reported
+                        </option>
+
+                        <option value="C">
+                          C — Short-term, no 1099-B
+                        </option>
+
+                        <option value="D">
+                          D — Long-term, basis reported
+                        </option>
+
+                        <option value="E">
+                          E — Long-term, basis not reported
+                        </option>
+
+                        <option value="F">
+                          F — Long-term, no 1099-B
+                        </option>
+
+                        <option value="review">
+                          Needs review
+                        </option>
+                      </select>
+
+                      <p
+                        class="field-error"
+                        id="form8949CategoryError"
+                      ></p>
+                    </div>
+
+                    <div class="form-field form-field--wide">
+                      <label for="transactionNotes">
+                        Notes
+                      </label>
+
+                      <textarea
+                        id="transactionNotes"
+                        name="transactionNotes"
+                        rows="3"
+                        maxlength="500"
+                        placeholder="Optional review notes"
+                      ></textarea>
+
+                      <p
+                        class="field-error"
+                        id="transactionNotesError"
+                      ></p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Calculation preview -->
+
+                <div
+                  class="calculation-preview"
+                  aria-live="polite"
+                >
+                  <span>Previewed gain/loss</span>
+
+                  <strong id="transactionGainLossPreview">
+                    $0.00
+                  </strong>
+
+                  <small id="transactionTermPreview">
+                    Holding period not determined
+                  </small>
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    class="button button--secondary"
+                    id="cancelTransactionButton"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    class="button button--primary"
+                    type="submit"
+                  >
+                    Save transaction
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Transaction table -->
+
+          <article class="panel">
+            <div class="table-toolbar">
+              <div class="table-toolbar__search">
+                <label
+                  class="visually-hidden"
+                  for="transactionSearch"
+                >
+                  Search transactions
+                </label>
+
+                <input
+                  id="transactionSearch"
+                  type="search"
+                  placeholder="Search description, symbol, broker, or account"
+                >
+              </div>
+
+              <div class="table-toolbar__filters">
+                <label for="termFilter">
+                  <span class="visually-hidden">
+                    Filter by holding period
+                  </span>
+
+                  <select id="termFilter">
+                    <option value="all">
+                      All terms
+                    </option>
+
+                    <option value="short">
+                      Short-term
+                    </option>
+
+                    <option value="long">
+                      Long-term
+                    </option>
+
+                    <option value="unknown">
+                      Needs review
+                    </option>
+                  </select>
+                </label>
+
+                <label for="categoryFilter">
+                  <span class="visually-hidden">
+                    Filter by Form 8949 category
+                  </span>
+
+                  <select id="categoryFilter">
+                    <option value="all">
+                      All categories
+                    </option>
+
+                    <option value="A">
+                      Category A
+                    </option>
+
+                    <option value="B">
+                      Category B
+                    </option>
+
+                    <option value="C">
+                      Category C
+                    </option>
+
+                    <option value="D">
+                      Category D
+                    </option>
+
+                    <option value="E">
+                      Category E
+                    </option>
+
+                    <option value="F">
+                      Category F
+                    </option>
+
+                    <option value="review">
+                      Needs review
+                    </option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="transaction-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Description</th>
+                    <th scope="col">Acquired</th>
+                    <th scope="col">Sold</th>
+                    <th scope="col">Term</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Proceeds</th>
+                    <th scope="col">Basis</th>
+                    <th scope="col">Adjustment</th>
+                    <th scope="col">Gain/loss</th>
+
+                    <th scope="col">
+                      <span class="visually-hidden">
+                        Transaction actions
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody id="transactionTableBody"></tbody>
+              </table>
+            </div>
+
+            <div
+              class="empty-state"
+              id="transactionEmptyState"
+            >
+              <span
+                class="empty-state__icon"
+                aria-hidden="true"
+              >
+                ↕
+              </span>
+
+              <h3>No transactions yet</h3>
+
+              <p>
+                Add an individual transaction or import a
+                brokerage CSV file.
+              </p>
+
+              <button
+                class="button button--primary"
+                id="emptyStateAddTransactionButton"
+                type="button"
+              >
+                Add first transaction
+              </button>
+            </div>
+          </article>
+        </section>
+
+        <!-- =================================================
+             IMPORT VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view"
+          id="importView"
+          aria-labelledby="importTitle"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Import center
+              </p>
+
+              <h2 id="importTitle">
+                Import brokerage information
+              </h2>
+
+              <p>
+                Import a brokerage CSV, restore a saved
+                workspace, or begin an assisted review of a
+                consolidated 1099 PDF.
+              </p>
+            </div>
+          </div>
+
+          <div class="import-grid">
+            <!-- CSV import -->
+
+            <article class="import-card">
+              <div
+                class="import-card__icon"
+                aria-hidden="true"
+              >
+                CSV
+              </div>
+
+              <h3>Brokerage CSV</h3>
+
+              <p>
+                Upload transaction data, map the brokerage
+                columns, preview the rows, and resolve errors
+                before importing.
+              </p>
+
+              <label
+                class="button button--primary file-button"
+                for="csvFileInput"
+              >
+                Choose CSV file
+              </label>
+
+              <input
+                id="csvFileInput"
+                type="file"
+                accept=".csv,text/csv"
+                hidden
+              >
+
+              <p
+                class="file-selection"
+                id="csvFileSelection"
+                aria-live="polite"
+              >
+                No CSV selected
+              </p>
+            </article>
+
+            <!-- PDF import -->
+
+            <article class="import-card">
+              <div
+                class="import-card__icon"
+                aria-hidden="true"
+              >
+                PDF
+              </div>
+
+              <h3>Consolidated 1099 PDF</h3>
+
+              <p>
+                Detect relevant 1099-B sections and review
+                extracted data against the original brokerage
+                statement.
+              </p>
+
+              <label
+                class="button button--secondary file-button"
+                for="pdfFileInput"
+              >
+                Choose PDF
+              </label>
+
+              <input
+                id="pdfFileInput"
+                type="file"
+                accept=".pdf,application/pdf"
+                hidden
+              >
+
+              <p
+                class="file-selection"
+                id="pdfFileSelection"
+                aria-live="polite"
+              >
+                Assisted PDF extraction is planned for a later
+                development stage.
+              </p>
+            </article>
+
+            <!-- Backup restore -->
+
+            <article class="import-card">
+              <div
+                class="import-card__icon"
+                aria-hidden="true"
+              >
+                JSON
+              </div>
+
+              <h3>Restore workspace</h3>
+
+              <p>
+                Restore a Velzarytha workspace backup previously
+                downloaded from this tool.
+              </p>
+
+              <label
+                class="button button--secondary file-button"
+                for="backupFileInput"
+              >
+                Choose backup
+              </label>
+
+              <input
+                id="backupFileInput"
+                type="file"
+                accept=".json,application/json"
+                hidden
+              >
+
+              <p
+                class="file-selection"
+                id="backupFileSelection"
+                aria-live="polite"
+              >
+                No backup selected
+              </p>
+            </article>
+          </div>
+
+          <!-- Dynamic import workspace -->
+
+          <article
+            class="panel"
+            id="importWorkspace"
+            hidden
+          >
+            <div class="panel__heading">
+              <div>
+                <p class="eyebrow">
+                  Import review
+                </p>
+
+                <h3 id="importWorkspaceTitle">
+                  Map and review data
+                </h3>
+              </div>
+            </div>
+
+            <div id="importWorkspaceContent"></div>
+          </article>
+        </section>
+
+        <!-- =================================================
+             REVIEW VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view"
+          id="reviewView"
+          aria-labelledby="reviewTitle"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Data review
+              </p>
+
+              <h2 id="reviewTitle">
+                Review transactions
+              </h2>
+
+              <p>
+                Resolve missing basis, unknown holding periods,
+                reporting-category conflicts, possible
+                duplicates, and import total differences.
+              </p>
+            </div>
+          </div>
+
+          <div class="review-summary">
+            <article class="review-card">
+              <span class="review-card__label">
+                Blocking issues
+              </span>
+
+              <strong id="blockingIssueCount">
+                0
+              </strong>
+
+              <small>
+                Must be reviewed before reports
+              </small>
+            </article>
+
+            <article class="review-card">
+              <span class="review-card__label">
+                Review warnings
+              </span>
+
+              <strong id="warningIssueCount">
+                0
+              </strong>
+
+              <small>
+                May require additional information
+              </small>
+            </article>
+
+            <article class="review-card">
+              <span class="review-card__label">
+                Possible duplicates
+              </span>
+
+              <strong id="duplicateIssueCount">
+                0
+              </strong>
+
+              <small>
+                Compare before removing
+              </small>
+            </article>
+          </div>
+
+          <article class="panel">
+            <div
+              class="empty-state"
+              id="reviewEmptyState"
+            >
+              <span
+                class="empty-state__icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <h3>Nothing to review yet</h3>
+
+              <p>
+                Validation results will appear after
+                transactions are entered or imported.
+              </p>
+            </div>
+
+            <div
+              class="issue-list"
+              id="reviewIssueList"
+              hidden
+            ></div>
+          </article>
+        </section>
+
+        <!-- =================================================
+             ESTIMATE VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view"
+          id="estimateView"
+          aria-labelledby="estimateTitle"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Federal planning estimate
+              </p>
+
+              <h2 id="estimateTitle">
+                Estimated capital-gains impact
+              </h2>
+
+              <p>
+                This section will combine reviewed capital-gain
+                totals with filing status, other taxable income,
+                and capital-loss carryover information.
+              </p>
+            </div>
+          </div>
+
+          <aside class="notice notice--info">
+            <div class="notice__icon" aria-hidden="true">
+              i
+            </div>
+
+            <div>
+              <h3>Estimate engine not enabled yet</h3>
+
+              <p>
+                The transaction organizer, browser storage, and
+                validation system will be completed first.
+                Verified tax-year rules will be added separately.
+              </p>
+            </div>
+          </aside>
+
+          <article class="panel">
+            <fieldset
+              class="form-section"
+              disabled
+            >
+              <legend>Future estimate inputs</legend>
+
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="estimateTaxYear">
+                    Tax year
+                  </label>
+
+                  <select id="estimateTaxYear">
+                    <option>
+                      Tax-year rules pending
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label for="filingStatus">
+                    Filing status
+                  </label>
+
+                  <select id="filingStatus">
+                    <option value="single">
+                      Single
+                    </option>
+
+                    <option value="married-joint">
+                      Married filing jointly
+                    </option>
+
+                    <option value="married-separate">
+                      Married filing separately
+                    </option>
+
+                    <option value="head-household">
+                      Head of household
+                    </option>
+
+                    <option value="surviving-spouse">
+                      Qualifying surviving spouse
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label for="otherTaxableIncome">
+                    Other taxable income
+                  </label>
+
+                  <div class="money-input">
+                    <span aria-hidden="true">$</span>
+
+                    <input
+                      id="otherTaxableIncome"
+                      type="text"
+                      inputmode="decimal"
+                      placeholder="0.00"
+                    >
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="capitalLossCarryover">
+                    Capital-loss carryover
+                  </label>
+
+                  <div class="money-input">
+                    <span aria-hidden="true">$</span>
+
+                    <input
+                      id="capitalLossCarryover"
+                      type="text"
+                      inputmode="decimal"
+                      placeholder="0.00"
+                    >
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </article>
+        </section>
+
+        <!-- =================================================
+             REPORTS VIEW
+             ================================================= -->
+
+        <section
+          class="workspace-view"
+          id="reportsView"
+          aria-labelledby="reportsTitle"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">
+                Worksheets and exports
+              </p>
+
+              <h2 id="reportsTitle">
+                Reports
+              </h2>
+
+              <p>
+                Generate planning summaries after reviewing and
+                resolving transaction issues.
+              </p>
+            </div>
+          </div>
+
+          <div class="report-grid">
+            <article class="report-card">
+              <h3>Form 8949-style worksheet</h3>
+
+              <p>
+                Group reviewed transactions into reporting
+                categories A through F.
+              </p>
+
+              <button
+                class="button button--secondary"
+                id="form8949ReportButton"
+                type="button"
+                disabled
+              >
+                Generate worksheet
+              </button>
+            </article>
+
+            <article class="report-card">
+              <h3>Schedule D-style summary</h3>
+
+              <p>
+                Review summarized short-term and long-term gain
+                and loss totals.
+              </p>
+
+              <button
+                class="button button--secondary"
+                id="scheduleDReportButton"
+                type="button"
+                disabled
+              >
+                Generate summary
+              </button>
+            </article>
+
+            <article class="report-card">
+              <h3>Transaction CSV</h3>
+
+              <p>
+                Export normalized transaction records for review
+                or transfer.
+              </p>
+
+              <button
+                class="button button--secondary"
+                id="exportCsvButton"
+                type="button"
+                disabled
+              >
+                Export CSV
+              </button>
+            </article>
+
+            <article class="report-card">
+              <h3>Print workspace</h3>
+
+              <p>
+                Print the current transaction and summary
+                information.
+              </p>
+
+              <button
+                class="button button--secondary"
+                id="printWorkspaceButton"
+                type="button"
+                disabled
+              >
+                Print report
+              </button>
+            </article>
+          </div>
+
+          <div
+            class="report-output"
+            id="reportOutput"
+            hidden
+          ></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- =====================================================
+       CONFIRMATION DIALOG
+       ===================================================== -->
+
+  <div
+    class="dialog-backdrop"
+    id="confirmDialogBackdrop"
+    hidden
+  >
+    <section
+      class="confirm-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirmDialogTitle"
+      aria-describedby="confirmDialogMessage"
+    >
+      <h2 id="confirmDialogTitle">
+        Confirm action
+      </h2>
+
+      <p id="confirmDialogMessage"></p>
+
+      <div class="confirm-dialog__actions">
+        <button
+          class="button button--secondary"
+          id="confirmDialogCancelButton"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="button button--danger"
+          id="confirmDialogConfirmButton"
+          type="button"
+        >
+          Confirm
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast notification area -->
+
+  <div
+    class="toast-region"
+    id="toastRegion"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>
+        © <span id="currentYear"></span> Velzarytha
+      </p>
+
+      <nav aria-label="Footer navigation">
+        <a href="../index.html">
+          Home
+        </a>
+
+        <a href="./fixed-assets/index.html">
+          Depreciation
+        </a>
+
+        <a href="#mainContent">
+          Back to top
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <noscript>
+    <div class="noscript-warning">
+      JavaScript is required for transaction calculations,
+      imports, and browser storage.
+    </div>
+  </noscript>
+</body>
+</html>
