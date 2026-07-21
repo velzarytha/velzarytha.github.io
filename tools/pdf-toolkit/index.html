@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velzarytha PDF Toolkit — merge, split, organize, compress, resize, sign, OCR, protect, edit, and convert PDFs into structured Word and Excel files locally in your browser.">
+  <title>PDF Toolkit | Velzarytha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/pdf-toolkit.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../../index.html" aria-label="Velzarytha home">
+      <span class="brand-mark">V</span>
+      <span>Velzarytha</span>
+    </a>
+    <nav>
+      <a href="#tools">PDF Tools</a>
+      <a href="#privacy">Privacy</a>
+      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle color theme">☾</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">PRIVATE • CLIENT-SIDE • NO UPLOAD</p>
+      <h1>PDF tools that work in your browser</h1>
+      <p class="hero-copy">Merge, split, compress, convert, sign, OCR, protect and edit PDFs without sending your documents to a Velzarytha server.</p>
+      <div class="privacy-pill">Files stay on your device during processing</div>
+    </section>
+
+    <section id="tools" class="tool-grid" aria-label="PDF tools">
+      <button class="tool-card active" data-tool="merge" type="button"><span>⇄</span><strong>Merge PDF</strong><small>Combine multiple PDFs</small></button>
+      <button class="tool-card" data-tool="split" type="button"><span>✂</span><strong>Split PDF</strong><small>Extract pages or create a ZIP</small></button>
+      <button class="tool-card" data-tool="organize" type="button"><span>▦</span><strong>Organize PDF</strong><small>Reorder, rotate or delete pages</small></button>
+      <button class="tool-card" data-tool="images" type="button"><span>▧</span><strong>Images to PDF</strong><small>JPG, PNG and WebP</small></button>
+      <button class="tool-card" data-tool="pdfimages" type="button"><span>◫</span><strong>PDF to Images</strong><small>Export PNG or JPG</small></button>
+      <button class="tool-card" data-tool="watermark" type="button"><span>W</span><strong>Watermark</strong><small>Add text to every page</small></button>
+      <button class="tool-card" data-tool="numbers" type="button"><span>#</span><strong>Page Numbers</strong><small>Number every PDF page</small></button>
+      <button class="tool-card" data-tool="compress" type="button"><span>⇲</span><strong>Compress &amp; Resize</strong><small>PDF, photos and portal sizes</small></button>
+      <button class="tool-card" data-tool="sign" type="button"><span>✍</span><strong>Sign PDF</strong><small>Draw, type or upload a signature</small></button>
+      <button class="tool-card" data-tool="ocr" type="button"><span>OCR</span><strong>OCR &amp; Searchable PDF</strong><small>Recognize scans and images</small></button>
+      <button class="tool-card" data-tool="protect" type="button"><span>⌁</span><strong>Protect PDF</strong><small>AES password and permissions</small></button>
+      <button class="tool-card" data-tool="unlock" type="button"><span>⌂</span><strong>Unlock PDF</strong><small>Remove a known password</small></button>
+      <button class="tool-card" data-tool="edit" type="button"><span>✎</span><strong>Edit &amp; Fill</strong><small>Annotate and fill PDF forms</small></button>
+      <button class="tool-card" data-tool="office" type="button"><span>⇥</span><strong>PDF to Word / Excel</strong><small>Structured DOCX, XLSX and CSV</small></button>
+      <button class="tool-card" data-tool="text" type="button"><span>T</span><strong>PDF to Text</strong><small>Extract selectable text</small></button>
+    </section>
+
+    <section class="workspace">
+      <div class="workspace-heading">
+        <div>
+          <p class="eyebrow">WORKSPACE</p>
+          <h2 id="workspaceTitle">Merge PDF</h2>
+        </div>
+        <button id="resetTool" class="secondary-button" type="button">Reset current tool</button>
+      </div>
+
+      <article class="tool-panel active" id="panel-merge">
+        <div class="drop-zone">
+          <input id="mergeFiles" type="file" accept="application/pdf" multiple>
+          <strong>Select PDF files</strong><span>Choose two or more files to combine</span>
+        </div>
+        <div id="mergeList" class="file-list"></div>
+        <button id="mergeButton" class="primary-button" type="button">Merge and download</button>
+        <p id="mergeStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-split">
+        <div class="drop-zone"><input id="splitFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Choose the document to split or extract</span></div>
+        <div class="form-grid">
+          <label>Pages or ranges<input id="splitRanges" type="text" placeholder="Example: 1-3, 6, 9-12"></label>
+          <label>Output<select id="splitMode"><option value="extract">One PDF containing selected pages</option><option value="separate">Separate one-page PDFs in a ZIP</option></select></label>
+        </div>
+        <button id="splitButton" class="primary-button" type="button">Create output</button>
+        <p id="splitStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-organize">
+        <div class="drop-zone"><input id="organizeFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Load page thumbnails for editing</span></div>
+        <div id="organizePages" class="page-grid"></div>
+        <button id="organizeButton" class="primary-button" type="button">Download organized PDF</button>
+        <p id="organizeStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-images">
+        <div class="drop-zone"><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple><strong>Select images</strong><span>JPG, PNG or WebP files</span></div>
+        <div class="form-grid">
+          <label>Page size<select id="imagePageSize"><option value="auto">Fit page to each image</option><option value="a4">A4 portrait</option><option value="letter">US Letter portrait</option></select></label>
+          <label>Margin<select id="imageMargin"><option value="0">No margin</option><option value="24">Small</option><option value="48">Medium</option></select></label>
+        </div>
+        <div id="imageList" class="file-list"></div>
+        <button id="imagesButton" class="primary-button" type="button">Create PDF</button>
+        <p id="imagesStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-pdfimages">
+        <div class="drop-zone"><input id="pdfImagesFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Every page will become an image</span></div>
+        <div class="form-grid">
+          <label>Image format<select id="pdfImageFormat"><option value="png">PNG</option><option value="jpeg">JPG</option></select></label>
+          <label>Resolution<select id="pdfImageScale"><option value="1.25">Standard</option><option value="1.75" selected>High</option><option value="2.25">Very high</option></select></label>
+        </div>
+        <button id="pdfImagesButton" class="primary-button" type="button">Create image ZIP</button>
+        <p id="pdfImagesStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-watermark">
+        <div class="drop-zone"><input id="watermarkFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Add a text watermark to every page</span></div>
+        <div class="form-grid three">
+          <label>Watermark text<input id="watermarkText" type="text" value="CONFIDENTIAL" maxlength="80"></label>
+          <label>Position<select id="watermarkPosition"><option value="center">Center</option><option value="top">Top center</option><option value="bottom">Bottom center</option></select></label>
+          <label>Opacity<input id="watermarkOpacity" type="range" min="0.08" max="0.8" value="0.22" step="0.02"><output id="watermarkOpacityValue">22%</output></label>
+        </div>
+        <button id="watermarkButton" class="primary-button" type="button">Add watermark</button>
+        <p id="watermarkStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-numbers">
+        <div class="drop-zone"><input id="numbersFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Add page numbers to the document</span></div>
+        <div class="form-grid three">
+          <label>Format<select id="numberFormat"><option value="simple">1, 2, 3</option><option value="page">Page 1</option><option value="total">Page 1 of 10</option></select></label>
+          <label>Position<select id="numberPosition"><option value="bottom-center">Bottom center</option><option value="bottom-right">Bottom right</option><option value="top-center">Top center</option><option value="top-right">Top right</option></select></label>
+          <label>Start number<input id="numberStart" type="number" min="0" value="1"></label>
+        </div>
+        <button id="numbersButton" class="primary-button" type="button">Add page numbers</button>
+        <p id="numbersStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-compress">
+        <div class="notice"><strong>Compress &amp; Resize:</strong> Upload a PDF, JPG, PNG or WebP file. Full-document PDF compression keeps all pages. Photo, passport and image-output modes process one image or one selected PDF page. Files remain in your browser.</div>
+
+        <div class="drop-zone">
+          <input id="compressFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp">
+          <strong>Select a PDF or image</strong>
+          <span>PDF, JPG, PNG or WebP</span>
+        </div>
+
+        <div class="form-grid three">
+          <label>Content type
+            <select id="compressPreset">
+              <option value="auto" selected>Automatic</option>
+              <option value="document">Document or scanned form</option>
+              <option value="photo">Photo</option>
+              <option value="passport">Passport / portal photo</option>
+            </select>
+          </label>
+          <label>Output format
+            <select id="compressOutput">
+              <option value="auto" selected>Keep suitable format</option>
+              <option value="pdf">PDF</option>
+              <option value="jpeg">JPG</option>
+              <option value="png">PNG</option>
+            </select>
+          </label>
+          <label>Compression mode
+            <select id="compressMode">
+              <option value="preserve">Preserve structure / source</option>
+              <option value="high">High quality</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="strong">Strong compression</option>
+              <option value="target">Maximum file size</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-grid three">
+          <label>Color handling
+            <select id="compressColor">
+              <option value="auto" selected>Smart auto</option>
+              <option value="color">Keep color</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="mono">Black &amp; white text scan</option>
+            </select>
+          </label>
+          <label>PDF page for photo/image output
+            <input id="compressPageNumber" type="number" min="1" value="1">
+          </label>
+          <label class="check-option">Searchable PDF text
+            <span class="check-row"><input id="compressPreserveText" type="checkbox" checked> Preserve when possible</span>
+          </label>
+        </div>
+
+        <div id="compressTargetOptions" class="target-options is-hidden">
+          <div class="form-grid four">
+            <label>Maximum size
+              <input id="compressTargetValue" type="number" min="1" step="1" value="100">
+            </label>
+            <label>Unit
+              <select id="compressTargetUnit"><option value="KB" selected>KB</option><option value="MB">MB</option></select>
+            </label>
+            <label>Minimum size (optional)
+              <input id="compressMinimumSize" type="number" min="0" step="1" value="0" placeholder="Example: 20">
+            </label>
+            <label>Quality floor
+              <select id="compressMinimumQuality">
+                <option value="high">High — stop early</option>
+                <option value="balanced" selected>Balanced</option>
+                <option value="small">Aggressive</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <section class="resize-options" aria-labelledby="resizeHeading">
+          <div class="subsection-heading">
+            <div>
+              <h3 id="resizeHeading">Optional resize and crop</h3>
+              <p>Leave width and height at 0 to keep the natural size. Exact dimensions are useful for job, exam and government portals.</p>
+            </div>
+          </div>
+          <div class="form-grid four">
+            <label>Width (px)<input id="compressWidth" type="number" min="0" max="10000" value="0"></label>
+            <label>Height (px)<input id="compressHeight" type="number" min="0" max="10000" value="0"></label>
+            <label>Fit method
+              <select id="compressFit">
+                <option value="contain" selected>Fit without cropping</option>
+                <option value="cover">Fill and crop</option>
+              </select>
+            </label>
+            <label>Crop focus
+              <select id="compressCropFocus">
+                <option value="center" selected>Center</option>
+                <option value="upper">Upper area / portrait</option>
+              </select>
+            </label>
+          </div>
+          <div class="option-row">
+            <label class="inline-check"><input id="compressAutoTrim" type="checkbox"> Automatically trim white margins</label>
+            <label class="inline-check"><input id="compressExactDimensions" type="checkbox" checked> Keep entered dimensions exact</label>
+          </div>
+        </section>
+
+        <section class="compression-preview" aria-label="Compression preview">
+          <div class="preview-frame"><canvas id="compressPreviewCanvas" width="640" height="360"></canvas></div>
+          <div class="preview-copy">
+            <h3>Preview</h3>
+            <p id="compressPreviewInfo">Select a file to preview its first page or image.</p>
+            <button id="compressPreviewButton" class="secondary-button" type="button">Update preview</button>
+          </div>
+        </section>
+
+        <p id="compressModeHelp" class="mode-help"></p>
+        <progress id="compressProgress" class="compression-progress" max="100" value="0" hidden></progress>
+
+        <div class="button-row">
+          <button id="compressButton" class="primary-button" type="button">Process and download</button>
+          <button id="compressCancel" class="secondary-button" type="button" disabled>Cancel</button>
+        </div>
+
+        <div id="compressSummary" class="result-summary" hidden></div>
+        <p id="compressStatus" class="status" role="status" aria-live="polite"></p>
+      </article>
+
+
+      <article class="tool-panel" id="panel-sign">
+        <div class="notice"><strong>Visible signature:</strong> This places a drawn, typed or uploaded signature image onto the PDF. It is not a certificate-based cryptographic digital signature. Files remain in your browser.</div>
+
+        <div class="drop-zone">
+          <input id="signFile" type="file" accept="application/pdf">
+          <strong>Select one PDF</strong>
+          <span>Choose the document you want to sign</span>
+        </div>
+
+        <section class="signature-builder" aria-label="Create signature">
+          <div class="subsection-heading">
+            <h3>Create your signature</h3>
+            <p>Draw it, type it, or upload a signature image. Review the preview before downloading.</p>
+          </div>
+
+          <div class="signature-method-tabs" role="tablist" aria-label="Signature method">
+            <button class="signature-method-tab active" data-sign-method="draw" type="button" role="tab" aria-selected="true">Draw</button>
+            <button class="signature-method-tab" data-sign-method="type" type="button" role="tab" aria-selected="false">Type</button>
+            <button class="signature-method-tab" data-sign-method="upload" type="button" role="tab" aria-selected="false">Upload</button>
+          </div>
+
+          <div class="signature-method-panel active" id="sign-method-draw">
+            <canvas id="signatureDrawCanvas" class="signature-draw-canvas" width="900" height="240" aria-label="Draw signature"></canvas>
+            <div class="button-row compact">
+              <button id="signatureUseDrawn" class="secondary-button" type="button">Use drawn signature</button>
+              <button id="signatureClearDrawn" class="secondary-button" type="button">Clear drawing</button>
+            </div>
+          </div>
+
+          <div class="signature-method-panel" id="sign-method-type">
+            <div class="form-grid three">
+              <label>Signature text<input id="signatureTypedText" type="text" maxlength="80" placeholder="Type your name"></label>
+              <label>Style<select id="signatureTypedStyle"><option value="script">Script</option><option value="elegant">Elegant</option><option value="clean">Clean</option></select></label>
+              <label>Ink color<select id="signatureInk"><option value="black">Black</option><option value="blue">Blue</option><option value="darkblue">Dark blue</option></select></label>
+            </div>
+            <button id="signatureUseTyped" class="secondary-button" type="button">Use typed signature</button>
+          </div>
+
+          <div class="signature-method-panel" id="sign-method-upload">
+            <div class="signature-upload-row">
+              <label class="signature-file-label">Signature image
+                <input id="signatureImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+              </label>
+              <label class="inline-check"><input id="signatureRemoveWhite" type="checkbox" checked> Remove near-white background</label>
+              <button id="signatureUseUploaded" class="secondary-button" type="button">Use uploaded image</button>
+            </div>
+            <p id="signatureUploadInfo" class="mode-help">PNG with a transparent background gives the cleanest result.</p>
+          </div>
+
+          <div id="signatureReady" class="signature-ready" role="status">No signature prepared yet.</div>
+        </section>
+
+        <div class="form-grid four">
+          <label>Preview page<input id="signPreviewPage" type="number" min="1" value="1"></label>
+          <label>Apply signature to<select id="signApplyTo"><option value="current">Previewed page only</option><option value="all">Every page</option><option value="ranges">Selected pages or ranges</option></select></label>
+          <label id="signRangesLabel" class="is-hidden">Pages or ranges<input id="signRanges" type="text" placeholder="Example: 1, 3-5"></label>
+          <label>Position<select id="signPosition"><option value="custom" selected>Drag on preview</option><option value="bottom-right">Bottom right</option><option value="bottom-left">Bottom left</option><option value="top-right">Top right</option><option value="top-left">Top left</option><option value="center">Center</option></select></label>
+        </div>
+
+        <div class="form-grid three">
+          <label>Signature width<input id="signSize" type="range" min="10" max="60" value="28" step="1"><output id="signSizeValue">28% of page width</output></label>
+          <label>Opacity<input id="signOpacity" type="range" min="0.2" max="1" value="1" step="0.05"><output id="signOpacityValue">100%</output></label>
+          <label class="check-option"><span>Placement</span><span class="check-row">Drag the signature directly on the page preview</span></label>
+        </div>
+
+        <section class="sign-preview-layout" aria-label="Signature placement preview">
+          <div class="sign-preview-frame">
+            <div id="signPreviewStage" class="sign-preview-stage">
+              <canvas id="signPdfPreviewCanvas" width="620" height="800"></canvas>
+              <img id="signOverlay" class="sign-overlay" alt="Signature placement preview" draggable="false" hidden>
+            </div>
+          </div>
+          <div class="preview-copy">
+            <h3>Place the signature</h3>
+            <p id="signPreviewInfo">Select a PDF and prepare a signature. Then drag the signature to the correct location.</p>
+            <div class="button-row compact vertical">
+              <button id="signUpdatePreview" class="secondary-button" type="button">Update page preview</button>
+              <button id="signResetPosition" class="secondary-button" type="button">Reset position</button>
+            </div>
+          </div>
+        </section>
+
+        <button id="signButton" class="primary-button" type="button">Sign and download PDF</button>
+        <p id="signStatus" class="status" role="status" aria-live="polite"></p>
+      </article>
+
+
+      <article class="tool-panel" id="panel-ocr">
+        <div class="notice"><strong>OCR:</strong> Converts scanned PDF pages or images into recognized text. Searchable PDF output places an invisible text layer over each page image. The first use downloads the selected language data and normally caches it in the browser.</div>
+        <div class="drop-zone">
+          <input id="ocrFile" type="file" accept="application/pdf,image/jpeg,image/png,image/webp">
+          <strong>Select a scanned PDF or image</strong>
+          <span>PDF, JPG, PNG or WebP</span>
+        </div>
+        <div class="form-grid four">
+          <label>OCR language
+            <select id="ocrLanguage">
+              <option value="eng" selected>English</option>
+              <option value="hin">Hindi</option>
+              <option value="tam">Tamil</option>
+              <option value="eng+hin">English + Hindi</option>
+              <option value="eng+tam">English + Tamil</option>
+            </select>
+          </label>
+          <label>PDF pages or ranges<input id="ocrRanges" type="text" placeholder="Blank = all, or 1-3, 7"></label>
+          <label>Output
+            <select id="ocrOutput">
+              <option value="searchable" selected>Searchable PDF</option>
+              <option value="text">Text file only</option>
+              <option value="both">Searchable PDF + text ZIP</option>
+            </select>
+          </label>
+          <label>Image preparation
+            <select id="ocrPreprocess">
+              <option value="auto" selected>Automatic grayscale</option>
+              <option value="original">Keep original</option>
+              <option value="threshold">High-contrast text scan</option>
+            </select>
+          </label>
+        </div>
+        <progress id="ocrProgress" class="compression-progress" max="100" value="0" hidden></progress>
+        <div class="button-row">
+          <button id="ocrButton" class="primary-button" type="button">Run OCR and download</button>
+          <button id="ocrCancel" class="secondary-button" type="button" disabled>Cancel</button>
+        </div>
+        <p id="ocrStatus" class="status" role="status" aria-live="polite"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-protect">
+        <div class="notice"><strong>Password protection:</strong> Uses standard PDF encryption locally in the browser. AES-256 is recommended. Permission restrictions depend on the PDF reader and are not a substitute for controlling who receives the file.</div>
+        <div class="drop-zone">
+          <input id="protectFile" type="file" accept="application/pdf">
+          <strong>Select one PDF</strong>
+          <span>Add an opening password or owner restrictions</span>
+        </div>
+        <div class="form-grid three">
+          <label>Open password<input id="protectOpenPassword" type="password" autocomplete="new-password" placeholder="Required to open the PDF"></label>
+          <label>Confirm open password<input id="protectOpenPasswordConfirm" type="password" autocomplete="new-password" placeholder="Repeat open password"></label>
+          <label>Owner password<input id="protectOwnerPassword" type="password" autocomplete="new-password" placeholder="Controls permission changes"></label>
+        </div>
+        <div class="form-grid three">
+          <label>Encryption<select id="protectAlgorithm"><option value="AES-256" selected>AES-256 (recommended)</option><option value="AES-128">AES-128 (compatibility)</option></select></label>
+          <label class="check-option"><span>Allow printing</span><span class="check-row"><input id="protectPrint" type="checkbox" checked> Printing permitted</span></label>
+          <label class="check-option"><span>Allow copying</span><span class="check-row"><input id="protectCopy" type="checkbox"> Text and image copying</span></label>
+        </div>
+        <div class="permission-grid">
+          <label class="inline-check"><input id="protectModify" type="checkbox"> Allow document modification</label>
+          <label class="inline-check"><input id="protectAnnotate" type="checkbox" checked> Allow annotations</label>
+          <label class="inline-check"><input id="protectFillForms" type="checkbox" checked> Allow form filling</label>
+          <label class="inline-check"><input id="protectAccessibility" type="checkbox" checked> Allow accessibility extraction</label>
+          <label class="inline-check"><input id="protectAssemble" type="checkbox"> Allow page assembly</label>
+        </div>
+        <button id="protectButton" class="primary-button" type="button">Protect and download PDF</button>
+        <p id="protectStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-unlock">
+        <div class="notice"><strong>Unlock with authorization:</strong> Use this only on a PDF you own or are authorized to modify. The correct owner password is normally required to remove restrictions and encryption.</div>
+        <div class="drop-zone">
+          <input id="unlockFile" type="file" accept="application/pdf">
+          <strong>Select a password-protected PDF</strong>
+          <span>The file remains on your device</span>
+        </div>
+        <div class="form-grid">
+          <label>Current password<input id="unlockPassword" type="password" autocomplete="current-password" placeholder="Enter the known password"></label>
+          <label class="check-option"><span>Output</span><span class="check-row">Unencrypted PDF copy</span></label>
+        </div>
+        <button id="unlockButton" class="primary-button" type="button">Unlock and download PDF</button>
+        <p id="unlockStatus" class="status" role="status"></p>
+      </article>
+
+      <article class="tool-panel" id="panel-edit">
+        <div class="notice"><strong>Edit &amp; Fill:</strong> Fill existing AcroForm fields and add visible text, X marks, highlights, rectangles or freehand ink. These visual tools are annotations, not secure redaction.</div>
+        <div class="drop-zone">
+          <input id="editFile" type="file" accept="application/pdf">
+          <strong>Select one PDF</strong>
+          <span>Load a page preview and available form fields</span>
+        </div>
+
+        <section class="edit-form-section">
+          <div class="subsection-heading"><h3>Detected form fields</h3><p id="editFormInfo">Select a PDF to inspect its fillable fields.</p></div>
+          <div id="editFormFields" class="form-fields-list"></div>
+          <label id="editFlattenLabel" class="inline-check is-hidden"><input id="editFlatten" type="checkbox"> Flatten filled fields into static content</label>
+        </section>
+
+        <div class="form-grid four">
+          <label>Preview page<input id="editPage" type="number" min="1" value="1"></label>
+          <label>Editing tool
+            <select id="editTool">
+              <option value="text" selected>Add text</option>
+              <option value="mark">Add X mark</option>
+              <option value="highlight">Highlight area</option>
+              <option value="rectangle">Draw rectangle</option>
+              <option value="freehand">Freehand ink</option>
+            </select>
+          </label>
+          <label>Text to place<input id="editTextValue" type="text" maxlength="180" placeholder="Enter text, then click the page"></label>
+          <label>Text size<input id="editFontSize" type="number" min="6" max="72" value="14"></label>
+        </div>
+        <div class="form-grid three">
+          <label>Color<input id="editColor" class="color-input" type="color" value="#5b4df5"></label>
+          <label>Opacity<input id="editOpacity" type="range" min="0.1" max="1" value="0.75" step="0.05"><output id="editOpacityValue">75%</output></label>
+          <label class="check-option"><span>How to use</span><span id="editToolHelp" class="check-row">Enter text and click the page.</span></label>
+        </div>
+
+        <section class="edit-preview-layout" aria-label="PDF editing preview">
+          <div class="edit-preview-frame">
+            <div id="editPreviewStage" class="edit-preview-stage">
+              <canvas id="editPdfCanvas" width="620" height="800"></canvas>
+              <canvas id="editOverlayCanvas" width="620" height="800"></canvas>
+            </div>
+          </div>
+          <div class="preview-copy">
+            <h3>Page editor</h3>
+            <p id="editPreviewInfo">Select a PDF, choose a tool and place annotations on the page.</p>
+            <div class="button-row compact vertical">
+              <button id="editUpdatePreview" class="secondary-button" type="button">Update page preview</button>
+              <button id="editUndo" class="secondary-button" type="button">Undo last annotation</button>
+              <button id="editClearPage" class="secondary-button" type="button">Clear annotations on page</button>
+            </div>
+          </div>
+        </section>
+
+        <button id="editButton" class="primary-button" type="button">Apply edits and download PDF</button>
+        <p id="editStatus" class="status" role="status" aria-live="polite"></p>
+      </article>
+
+
+
+      <article class="tool-panel" id="panel-office">
+        <div class="notice"><strong>Structured Office conversion:</strong> Converts selectable PDF text into editable Word paragraphs, headings, lists and tables, or reconstructs detected tables into Excel sheets. Scanned pages can use OCR. Complex layouts should be reviewed in the editable preview before export.</div>
+
+        <div class="drop-zone">
+          <input id="officeFile" type="file" accept="application/pdf">
+          <strong>Select one PDF</strong>
+          <span>Analyze document structure locally in your browser</span>
+        </div>
+
+        <div class="form-grid four">
+          <label>Output format
+            <select id="officeOutput">
+              <option value="docx" selected>Word document (.docx)</option>
+              <option value="xlsx">Excel workbook (.xlsx)</option>
+              <option value="csv">CSV table file(s)</option>
+            </select>
+          </label>
+          <label>Document type
+            <select id="officeMode">
+              <option value="auto" selected>Automatic structure detection</option>
+              <option value="document">Text document / report</option>
+              <option value="table">Tables / data report</option>
+              <option value="statement">Bank, invoice or statement</option>
+              <option value="scan">Scanned document</option>
+            </select>
+          </label>
+          <label>Pages or ranges<input id="officeRanges" type="text" placeholder="Blank = all, or 1-5, 8"></label>
+          <label>OCR fallback
+            <select id="officeOcrMode">
+              <option value="auto" selected>Automatic for image-only pages</option>
+              <option value="off">Do not run OCR</option>
+              <option value="always">OCR every selected page</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-grid four">
+          <label>OCR language
+            <select id="officeOcrLanguage">
+              <option value="eng" selected>English</option>
+              <option value="hin">Hindi</option>
+              <option value="tam">Tamil</option>
+              <option value="eng+hin">English + Hindi</option>
+              <option value="eng+tam">English + Tamil</option>
+            </select>
+          </label>
+          <label>Table sensitivity
+            <select id="officeTableSensitivity">
+              <option value="balanced" selected>Balanced</option>
+              <option value="strict">Strict — fewer false tables</option>
+              <option value="aggressive">Aggressive — find more tables</option>
+            </select>
+          </label>
+          <label class="check-option"><span>Repeated content</span><span class="check-row"><input id="officeRemoveHeaders" type="checkbox" checked> Remove repeated headers and footers</span></label>
+          <label class="check-option"><span>Page layout</span><span class="check-row"><input id="officePageBreaks" type="checkbox" checked> Keep PDF page breaks in Word</span></label>
+        </div>
+
+        <div class="form-grid three">
+          <label class="check-option"><span>Spreadsheet values</span><span class="check-row"><input id="officeInferValues" type="checkbox" checked> Detect numbers, currency, percentages and dates</span></label>
+          <label class="check-option"><span>Workbook report</span><span class="check-row"><input id="officeAddReport" type="checkbox" checked> Add conversion report sheet</span></label>
+          <label class="check-option"><span>Table headers</span><span class="check-row"><input id="officeFirstRowHeader" type="checkbox" checked> Treat first row as table header</span></label>
+        </div>
+
+        <progress id="officeProgress" class="compression-progress" max="100" value="0" hidden></progress>
+        <div class="button-row">
+          <button id="officeAnalyze" class="primary-button" type="button">Analyze structure</button>
+          <button id="officeCancel" class="secondary-button" type="button" disabled>Cancel</button>
+        </div>
+        <p id="officeStatus" class="status" role="status" aria-live="polite"></p>
+
+        <section id="officeResults" class="office-results" hidden>
+          <div id="officeSummary" class="office-summary" aria-label="Conversion analysis summary"></div>
+
+          <div class="office-preview-heading">
+            <div>
+              <h3>Structure preview</h3>
+              <p id="officePreviewHelp">Review detected content before exporting.</p>
+            </div>
+            <button id="officeResetEdits" class="secondary-button" type="button">Reset preview edits</button>
+          </div>
+
+          <div id="officeDocumentPreview" class="office-document-preview"></div>
+
+          <div id="officeTableWorkspace" class="office-table-workspace" hidden>
+            <div class="office-table-toolbar">
+              <label>Detected table<select id="officeTableSelect"></select></label>
+              <button id="officeCleanTable" class="secondary-button" type="button">Remove empty rows/columns</button>
+              <button id="officeAddRow" class="secondary-button" type="button">Add row</button>
+              <button id="officeAddColumn" class="secondary-button" type="button">Add column</button>
+            </div>
+            <p class="mode-help">Click any table cell to correct its text. Preview edits are included in DOCX, XLSX and CSV exports.</p>
+            <div class="office-table-scroll">
+              <table id="officeTablePreview" class="office-table-preview"></table>
+            </div>
+          </div>
+
+          <div id="officeWarnings" class="office-warnings" hidden></div>
+          <button id="officeExport" class="primary-button" type="button">Export Word document</button>
+        </section>
+      </article>
+
+      <article class="tool-panel" id="panel-text">
+        <div class="notice"><strong>Selectable text:</strong> this extracts text already embedded in the PDF. For image-only scans, use OCR &amp; Searchable PDF.</div>
+        <div class="drop-zone"><input id="textFile" type="file" accept="application/pdf"><strong>Select one PDF</strong><span>Download extracted text as a TXT file</span></div>
+        <button id="textButton" class="primary-button" type="button">Extract text</button>
+        <p id="textStatus" class="status" role="status"></p>
+      </article>
+    </section>
+
+    <section id="privacy" class="privacy-section">
+      <div><p class="eyebrow">PRIVACY BY DESIGN</p><h2>Your documents are processed locally</h2></div>
+      <p>This version does not upload selected documents to a Velzarytha server. The browser reads the files and creates the output on your device. CDN libraries are loaded from the internet when the page opens.</p>
+    </section>
+
+    <section class="roadmap">
+      <h2>Complete browser toolkit</h2>
+      <div><span>Merge and split</span><span>Organize pages</span><span>Compress and resize</span><span>Images and conversion</span><span>Watermark and page numbers</span><span>Visible signatures</span><span>OCR searchable PDFs</span><span>AES password protection</span><span>Unlock with known password</span><span>Annotations and form filling</span><span>Text extraction</span><span>Structured Word conversion</span><span>Structured Excel and CSV conversion</span><span>PWA foundation</span></div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 Velzarytha</span><span>PDF Toolkit v3.0 Complete</span></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="vendor/libpdf.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="js/pdf-toolkit.js"></script>
+  <script src="js/office-converter.js"></script>
+</body>
+</html>
