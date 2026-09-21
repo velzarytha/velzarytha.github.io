@@ -1,0 +1,25 @@
+VELZARYTHA PDF TOOLKIT v3.0 — BUILD CHECKS
+==========================================
+
+Completed before packaging:
+- JavaScript syntax checked for pdf-toolkit.js and office-converter.js.
+- HTML parsed and checked for duplicate IDs.
+- All JavaScript element references checked against HTML IDs.
+- Confirmed 15 tool cards and 15 matching tool panels.
+- Browser UI smoke test completed for the PDF to Word / Excel panel.
+- Synthetic two-page statement test completed:
+  - heading and paragraph reconstruction
+  - table detection
+  - editable table preview
+  - XLSX download flow
+  - DOCX download flow
+- Desktop and mobile layouts visually reviewed.
+- ZIP integrity and required-path checks performed during packaging.
+
+Recommended user testing:
+1. Simple text report to DOCX.
+2. Bank statement or invoice to XLSX.
+3. Image-only scanned page with OCR fallback.
+4. Multiple detected tables to XLSX and CSV ZIP.
+5. Hindi or Tamil OCR sample where needed.
+6. Large document using selected page ranges first.

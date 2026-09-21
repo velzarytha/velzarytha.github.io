@@ -1,0 +1,16 @@
+VELZARYTHA PDF TOOLKIT — THIRD-PARTY COMPONENTS
+================================================
+
+This project loads or includes the following client-side libraries:
+
+- PDF-Lib 1.17.1 — MIT License
+- PDF.js 3.11.174 — Apache License 2.0
+- JSZip 3.10.1 — MIT or GPLv3 dual license
+- Tesseract.js 5.1.1 — Apache License 2.0
+- docx 9.7.1 — MIT License
+- SheetJS Community Edition 0.20.3 — Apache License 2.0
+- LibPDF bundle supplied with this toolkit — see the upstream LibPDF project license and documentation
+
+The CDN-loaded libraries are not uploaded with users' documents. The browser downloads executable library code when the page opens. Selected documents are processed locally by the browser in this build.
+
+Review each upstream project and license before commercial distribution or major modification.
